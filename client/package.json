@@ -8,10 +8,14 @@
     "@testing-library/jest-dom": "^5.11.6",
     "@testing-library/react": "^11.2.2",
     "@testing-library/user-event": "^12.2.2",
+    "eslint-import-resolver-webpack": "^0.13.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
-    "web-vitals": "^0.2.4"
+    "react-toastify": "^6.1.0",
+    "web-vitals": "^0.2.4",
+    "webpack": "^4.44.2"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -38,7 +42,6 @@
     ]
   },
   "devDependencies": {
-    "eslint": "^7.14.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-import": "^2.22.1",

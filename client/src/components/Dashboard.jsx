@@ -1,12 +1,12 @@
 import React from 'react';
 import { Typography, Button } from '.';
 
-const SignIn = ({ setAuth }) => {
+const Dashboard = ({ setAuth }) => {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
-      SignIn
-      <Button onClick={() => setAuth(true)}>Auth</Button>
+      Dashboard
+      <Button onClick={() => setAuth(false)}>Logout</Button>
     </Typography>
   );
 };
-export default SignIn;
+export default Dashboard;

@@ -9,5 +9,4 @@ CREATE TABLE users(
 );
 
 --insert fake users
-
 INSERT INTO users (user_email,user_password) VALUES ('roma.polyakov.2000@gmail.com','sklfib617R1');
