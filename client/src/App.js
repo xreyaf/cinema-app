@@ -38,6 +38,7 @@ export default function App() {
       <div className="container" />
       <Switch>
         <Route
+          type="guest"
           exact
           path="/login"
           render={(props) =>
