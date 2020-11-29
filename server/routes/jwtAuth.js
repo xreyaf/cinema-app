@@ -14,7 +14,7 @@ router.post("/register", validinfo, async (req, res) => {
 		]);
 
 		if (user.rows.length !== 0) {
-			return res.status(401).send("User already exist");
+			return res.status(401).json("Пользователь уже зарегистрирован!");
 		}
 		//bcypt пароля
 		const saltRounds = 10;
@@ -36,8 +36,7 @@ router.post("/register", validinfo, async (req, res) => {
 	}
 });
 
-//login route
-
+//login rout
 router.post("/login", validinfo, async (req, res) => {
 	try {
 		const { email, password } = req.body;
@@ -46,7 +45,7 @@ router.post("/login", validinfo, async (req, res) => {
 			email,
 		]);
 		if (user.rows.length === 0) {
-			return res.status(401).json("Passsword or Email is incorrect");
+			return res.status(401).json("Неверный email или пароль!");
 		}
 
 		const validPassword = await bcrypt.compare(
@@ -54,7 +53,7 @@ router.post("/login", validinfo, async (req, res) => {
 			user.rows[0].user_password
 		);
 		if (!validPassword) {
-			return res.status(401).json("Passsword or Email is incorrect");
+			return res.status(401).json("Неверный email или пароль!");
 		}
 		const token = jwtGenerator(user.rows[0].user_id);
 

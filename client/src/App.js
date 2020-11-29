@@ -1,12 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { Dashboard, SignIn, SignUp } from './components';
+import 'react-toastify/dist/ReactToastify.css';
+
+toast.configure();
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const setAuth = (boolean) => {
     setIsAuthenticated(boolean);
   };
+
+  async function isAuth() {
+    try {
+      const response = await fetch('http://localhost:5000/auth/is-verify', {
+        method: 'GET',
+        headers: { token: localStorage.token },
+      });
+
+      const parseRes = await response.json();
+
+      if (
+        parseRes === true ? setIsAuthenticated(true) : setIsAuthenticated(false)
+      );
+    } catch (err) {
+      console.log(err.message);
+    }
+  }
+
+  useEffect(() => {
+    isAuth();
+  });
 
   return (
     <BrowserRouter>

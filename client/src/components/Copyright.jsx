@@ -5,7 +5,7 @@ import { Typography } from '.';
 export default function SignIn() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
-      Copyright
+      Cinema application 2020
     </Typography>
   );
 }

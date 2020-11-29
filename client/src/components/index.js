@@ -1,7 +1,12 @@
 export { default as Dashboard } from './Dashboard';
 export { default as SignIn } from './SignIn';
 export { default as SignUp } from './SignUp';
+export { default as Copyright } from './Copyright';
 
+export { default as Box } from '@material-ui/core/Box';
+export { default as LockOutlinedIcon } from '@material-ui/icons/LockOutlined';
+export { default as HowToRegIcon } from '@material-ui/icons/HowToReg';
+export { default as Avatar } from '@material-ui/core/Avatar';
 export { default as IconButton } from '@material-ui/core/IconButton';
 export { default as Toolbar } from '@material-ui/core/Toolbar';
 export { default as Typography } from '@material-ui/core/Typography';

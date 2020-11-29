@@ -7,15 +7,15 @@ module.exports = function (req, res, next) {
 
 	if (req.path === "/register") {
 		if (![email, password].every(Boolean)) {
-			return res.status(401).json("Missing Credentials");
+			return res.status(401).json("Заполните все поля!");
 		} else if (!validEmail(email)) {
-			return res.status(401).json("Invalid Email");
+			return res.status(401).json("Неправильный email");
 		}
 	} else if (req.path === "/login") {
 		if (![email, password].every(Boolean)) {
-			return res.status(401).json("Missing Credentials");
+			return res.status(401).json("Заполните все поля!");
 		} else if (!validEmail(email)) {
-			return res.status(401).json("Invalid Email");
+			return res.status(401).json("Неправильный email");
 		}
 	}
 
