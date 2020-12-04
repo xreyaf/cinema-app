@@ -1,11 +1,45 @@
 import React from 'react';
 
-import { Typography } from '.';
+import { Typography, Link, Container } from '.';
 
-export default function SignIn() {
+export default function Copyright() {
   return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      Cinema application 2020
-    </Typography>
+    <Container>
+      <Typography variant="body2" color="textSecondary" align="center">
+        CINEMA APP
+        {` `}
+        {`© `}
+        {new Date().getFullYear()}
+        {` `}
+      </Typography>
+      <Typography variant="body2" color="textSecondary" align="center">
+        <Link
+          href="http://bmstu-kaluga.ru/"
+          target="_blank"
+          rel="noopener noreferrer"
+          color="inherit"
+        >
+          BMSTU KALUGA
+        </Link>
+        {` `}
+        <Link
+          href="https://vk.com/eic5_kb"
+          target="_blank"
+          rel="noopener noreferrer"
+          color="inherit"
+        >
+          IPS
+        </Link>
+        {` `}
+        <Link
+          href="https://github.com/xreyaf"
+          target="_blank"
+          rel="noopener noreferrer"
+          color="inherit"
+        >
+          XREYAF
+        </Link>
+      </Typography>
+    </Container>
   );
 }
