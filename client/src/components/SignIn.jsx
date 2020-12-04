@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
   form: {
     width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
+    marginTop: theme.spacing(3),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
@@ -143,8 +143,8 @@ export default function SignIn({ setAuth }) {
 
           <Grid container justify="flex-end">
             <Grid item>
-              <Link href="/register" variant="body2">
-                Нет аккаунта? Зарегистрироваться
+              <Link href="/register" variant="body2" color="secondary">
+                Нет аккаунта? Регистрация
               </Link>
             </Grid>
           </Grid>
