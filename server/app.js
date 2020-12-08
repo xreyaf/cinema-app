@@ -12,15 +12,7 @@ app.use("/auth", require("./routes/jwtAuth"));
 
 app.use("/dashboard", require("./routes/dashboard"));
 
-app.get("/movies", async (req, res) => {
-	try {
-		const movies = await pool.query("SELECT * FROM movies");
-		res.json(movies.rows);
-	} catch (err) {
-		console.error(err.message);
-		res.status(500).send("Server Error");
-	}
-});
+app.use("/movies", require("./routes/movies"));
 
 const port = process.env.PORT || 5000;
 

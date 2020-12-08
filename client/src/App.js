@@ -8,6 +8,8 @@ import {
   SignUp,
   CssBaseline,
   useMediaQuery,
+  Movie,
+  Footer,
 } from './components';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -125,10 +127,12 @@ export default function App() {
               )
             }
           />
+          <Route path="/movies/:id" component={Movie} />
           {/* <PrivateRoute path="/dashboard/my-tickets" component={MyTickets}/> */}
           <Route path="*" component={() => '404 NOT FOUND'} />
         </Switch>
       </BrowserRouter>
+      <Footer />
     </ThemeProvider>
   );
 }

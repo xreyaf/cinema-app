@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { textTruncate } from '../utils/utils';
 import {
   CssBaseline,
   Grid,
@@ -53,26 +54,37 @@ const Movies = () => {
   return (
     <>
       <CssBaseline />
+      <Typography
+        component="h1"
+        variant="h2"
+        align="center"
+        color="textPrimary"
+        gutterBottom
+      >
+        сейчас в прокате
+      </Typography>
       <Grid container spacing={2}>
         {data.length !== 0 &&
           data[0].movie_id !== null &&
           data.map((movies) => (
             <Grid item xs={12} sm={6} md={6}>
-              <Link href={data.image_url} underline="none">
+              <Link
+                href={`movies/${movies.movie_id}`}
+                style={{ textDecoration: 'none' }}
+              >
                 <Card className={classes.card}>
                   <CardActionArea>
                     <CardMedia
                       className={classes.cardMedia}
                       image={movies.image_url}
-                      title="Image title"
+                      title={movies.movie_title}
                     >
                       <CardContent className={classes.cardContent}>
                         <Typography gutterBottom variant="h5" component="h2">
                           {movies.movie_title}
                         </Typography>
                         <Typography>
-                          {movies.movie_description.slice(0, 150)}
-                          {`...`}
+                          {textTruncate(movies.movie_description, 150)}
                         </Typography>
                       </CardContent>
                     </CardMedia>

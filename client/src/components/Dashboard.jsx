@@ -12,10 +12,9 @@ import {
   IconButton,
   AccountCircle,
   MenuItem,
-  Box,
-  Copyright,
   Movies,
   Container,
+  Link,
 } from '.';
 
 const useStyles = makeStyles((theme) => ({
@@ -114,8 +113,11 @@ const Dashboard = ({ setAuth }, props) => {
               color="inherit"
               noWrap
             >
-              Cinema
+              <Link href="/" color="inherit" style={{ textDecoration: 'none' }}>
+                Cinema
+              </Link>
             </Typography>
+
             <Typography variant="body1" color="textPrimary" align="center">
               {email}
               {` `}
@@ -150,21 +152,9 @@ const Dashboard = ({ setAuth }, props) => {
           </Toolbar>
         </AppBar>
       </HideOnScroll>
-      <Container className={classes.cardGrid} maxWidth="lg">
-        <Typography
-          component="h1"
-          variant="h2"
-          align="center"
-          color="textPrimary"
-          gutterBottom
-        >
-          сейчас в прокате
-        </Typography>
+      <Container className={classes.cardGrid}>
         <Movies />
       </Container>
-      <Box m={1}>
-        <Copyright />
-      </Box>
     </>
   );
 };

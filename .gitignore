@@ -28,3 +28,14 @@ yarn-error.log*
 #Eslint and Prettier
 /.eslintrc.json
 /.prettierrc
+
+#db params
+server/db.js
+
+# dotenv environment variables file
+.env
+.env.test
+
+# Optional eslint cache
+.eslintcache
+client/.eslintcache

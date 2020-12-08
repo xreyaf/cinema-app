@@ -1,8 +1,9 @@
 export { default as Dashboard } from './Dashboard';
 export { default as SignIn } from './SignIn';
 export { default as SignUp } from './SignUp';
-export { default as Copyright } from './Copyright';
+export { default as Footer } from './Footer';
 export { default as Movies } from './Movies';
+export { default as Movie } from './Movie';
 
 export { default as IconButton } from '@material-ui/core/IconButton';
 export { default as AccountCircle } from '@material-ui/icons/AccountCircle';

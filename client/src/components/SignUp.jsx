@@ -11,8 +11,6 @@ import {
   TextField,
   Link,
   Grid,
-  Box,
-  Copyright,
 } from '.';
 
 const useStyles = makeStyles((theme) => ({
@@ -141,9 +139,6 @@ export default function SignUp({ setAuth }) {
           </Grid>
         </form>
       </div>
-      <Box mt={5}>
-        <Copyright />
-      </Box>
     </Container>
   );
 }

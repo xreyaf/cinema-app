@@ -11,8 +11,6 @@ import {
   TextField,
   Link,
   Grid,
-  Box,
-  Copyright,
 } from '.';
 
 const useStyles = makeStyles((theme) => ({
@@ -90,69 +88,68 @@ export default function SignIn({ setAuth }) {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Вход
-        </Typography>
-        <form className={classes.form} noValidate onSubmit={onSubmitForm}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="email"
-                label="Email"
-                name="email"
-                autoComplete="email"
-                value={email}
-                onChange={(e) => onChange(e)}
-              />
+    <>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Вход
+          </Typography>
+          <form className={classes.form} noValidate onSubmit={onSubmitForm}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email"
+                  name="email"
+                  autoComplete="email"
+                  value={email}
+                  onChange={(e) => onChange(e)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Пароль"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(e) => onChange(e)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                >
+                  Войти
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="password"
-                label="Пароль"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                value={password}
-                onChange={(e) => onChange(e)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-              >
-                Войти
-              </Button>
-            </Grid>
-          </Grid>
 
-          <Grid container justify="flex-end">
-            <Grid item>
-              <Link href="/register" variant="body2" color="secondary">
-                Нет аккаунта? Регистрация
-              </Link>
+            <Grid container justify="flex-end">
+              <Grid item>
+                <Link href="/register" variant="body2" color="secondary">
+                  Нет аккаунта? Регистрация
+                </Link>
+              </Grid>
             </Grid>
-          </Grid>
-        </form>
-      </div>
-      <Box mt={5}>
-        <Copyright />
-      </Box>
-    </Container>
+          </form>
+        </div>
+      </Container>
+    </>
   );
 }
