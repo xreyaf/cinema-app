@@ -15,6 +15,7 @@ import {
   Movies,
   Container,
   Link,
+  Footer,
 } from '.';
 
 const useStyles = makeStyles((theme) => ({
@@ -155,6 +156,7 @@ const Dashboard = ({ setAuth }, props) => {
       <Container className={classes.cardGrid}>
         <Movies />
       </Container>
+      <Footer />
     </>
   );
 };

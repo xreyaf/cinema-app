@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-
-import { Typography, Container, Box } from '.';
+import {
+  Typography,
+  Container,
+  Box,
+  Button,
+  ArrowBackIcon,
+  ConfirmationNumberIcon,
+} from '.';
 
 const Movie = () => {
   const [selectedMovie, setSelectedMovie] = useState('');
@@ -19,7 +24,6 @@ const Movie = () => {
       const parse = await res.json();
       setSelectedMovie(parse[0]);
       setGenre(parse[0].movie_genre);
-      console.log(parse[0].movie_genre);
     } catch (err) {
       console.error(err.message);
     }
@@ -45,12 +49,36 @@ const Movie = () => {
       transform: 'translate(0%, 0%)',
       padding: theme.spacing(30, 2, 0, 2),
       margin: theme.spacing(0, 50, 0, 0),
+      [theme.breakpoints.down('sm')]: {
+        padding: theme.spacing(15, 2, 0, 2),
+      },
     },
-    tag: {
-      padding: theme.spacing(0.3, 1),
-      marginRight: theme.spacing(1),
+    genre: {
+      padding: theme.spacing(0.5, 4),
+      marginRight: theme.spacing(1.5),
       border: '2px solid rgba(255,255,255,0.9)',
       borderRadius: 20,
+      [theme.breakpoints.down('sm')]: {
+        padding: theme.spacing(0.5, 2),
+      },
+    },
+    description: {
+      mixBlendMode: 'difference',
+      padding: theme.spacing(0, 50, 0, 0),
+      [theme.breakpoints.down('sm')]: {
+        padding: theme.spacing(0, 2, 0, 0),
+      },
+    },
+    btn: {
+      border: '2px solid rgba(255,255,255,0.9)',
+      borderRadius: 20,
+      padding: theme.spacing(0.7, 4),
+      marginRight: theme.spacing(1.5),
+    },
+    [theme.breakpoints.down('sm')]: {
+      hideOnSmall: {
+        display: 'none',
+      },
     },
   }));
 
@@ -58,7 +86,7 @@ const Movie = () => {
 
   return (
     <>
-      <Paper className={classes.backImg} />
+      <div className={classes.backImg} />
       <Container className={classes.movieInfo} maxWidth="lg">
         <Box mb={3} display="flex" alignItems="center" flexWrap="wrap">
           {genre[0] !== undefined ? (
@@ -66,13 +94,13 @@ const Movie = () => {
               <Typography
                 variant="subtitle1"
                 color="inherit"
-                className={classes.tag}
+                className={classes.genre}
               >
                 {genree}
               </Typography>
             ))
           ) : (
-            <p>pidoras</p>
+            <p>No genres</p>
           )}
         </Box>
 
@@ -80,19 +108,41 @@ const Movie = () => {
           {selectedMovie.movie_title}
         </Typography>
 
-        <Typography variant="body1" color="inherit" align="left" paragraph>
+        <Typography
+          className={classes.description}
+          variant="body1"
+          color="inherit"
+          align="left"
+          paragraph
+        >
           {selectedMovie.movie_description}
         </Typography>
-        <Typography variant="h4" color="inherit" align="left" gutterBottom>
+        <Typography variant="h5" color="inherit" align="left" gutterBottom>
           Режиссёр:
           {` `}
           {selectedMovie.movie_director}
         </Typography>
-        <Typography variant="body1" color="inherit" gutterBottom>
+        <Typography variant="body1" color="inherit" gutterBottom paragraph>
           {`Длительность: `}
           {selectedMovie.movie_duration}
           {` мин.`}
         </Typography>
+        <Button
+          className={classes.btn}
+          variant="outlined"
+          href="/dashboard"
+          startIcon={<ArrowBackIcon />}
+        >
+          Назад
+        </Button>
+        <Button
+          className={classes.btn}
+          variant="outlined"
+          href={`/booking/${id}`}
+          startIcon={<ConfirmationNumberIcon />}
+        >
+          Купить билеты
+        </Button>
       </Container>
     </>
   );

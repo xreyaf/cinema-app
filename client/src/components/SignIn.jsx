@@ -11,6 +11,7 @@ import {
   TextField,
   Link,
   Grid,
+  Footer,
 } from '.';
 
 const useStyles = makeStyles((theme) => ({
@@ -150,6 +151,7 @@ export default function SignIn({ setAuth }) {
           </form>
         </div>
       </Container>
+      <Footer />
     </>
   );
 }

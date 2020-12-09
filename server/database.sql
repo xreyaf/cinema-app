@@ -24,6 +24,15 @@ CREATE TABLE movies
   endDate TIMESTAMP NOT NULL
 );
 
+CREATE TABLE showtime
+(
+  startAt SERIAL PRIMARY KEY,
+  startDate INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+  endDate INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+  movie_id VARCHAR(255) NOT NULL
+  hall_id
+);
+
 INSERT INTO movies ( movie_title,
   movie_description,
   image_url,
@@ -77,19 +86,11 @@ INSERT INTO movies ( movie_title,
      movie_genre,
       releaseDate,
        endDate )
- VALUES ('Кролик Джоджо','Гитлеровская Германия. У немного стеснительного 10-летнего Йоханнеса Бетслера, члена Гитлерюгенда и большого поклонника официального курса, есть лучший друг - воображаемый Адольф Гитлер. Хоть мальчик сам ещё никак не научится завязывать шнурки, он отправляется на выходные в военно-патриотический лагерь, где, не решившись убить кролика, получает прозвище Кролик Джоджо. А после, пытаясь доказать окружающим свою смелость, парень случайно подрывается на гранате. Но вскоре у Джоджо появится более веская причина для волнения, чем собственные шрамы, - он выясняет, что мама прячет в доме еврейскую девушку.','https://image.tmdb.org/t/p/original/agoBZfL1q5G79SD0npArSlJn8BH.jpg','108','
-Тайка Вайтити','
-{"Драма", "Комедия", "Военный", "История"}','2020-12-01 19:10:25-07','2020-12-05 19:10:25-07');
+ VALUES ('Кролик Джоджо','Гитлеровская Германия. У немного стеснительного 10-летнего Йоханнеса Бетслера, члена Гитлерюгенда и большого поклонника официального курса, есть лучший друг - воображаемый Адольф Гитлер. Хоть мальчик сам ещё никак не научится завязывать шнурки, он отправляется на выходные в военно-патриотический лагерь, где, не решившись убить кролика, получает прозвище Кролик Джоджо. А после, пытаясь доказать окружающим свою смелость, парень случайно подрывается на гранате. Но вскоре у Джоджо появится более веская причина для волнения, чем собственные шрамы, - он выясняет, что мама прячет в доме еврейскую девушку.','https://image.tmdb.org/t/p/original/agoBZfL1q5G79SD0npArSlJn8BH.jpg','108','Тайка Вайтити','{"Драма", "Комедия", "Военный", "История"}','2020-12-01 19:10:25-07','2020-12-05 19:10:25-07');
 
 
 
 
 
 
-CREATE TABLE showtime
-(
-  follower_id SERIAL PRIMARY KEY,
-  follower_user INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
-  following_user INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
-  followed_on VARCHAR(255) NOT NULL
-);
+

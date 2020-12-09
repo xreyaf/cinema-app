@@ -11,6 +11,7 @@ import {
   TextField,
   Link,
   Grid,
+  Footer,
 } from '.';
 
 const useStyles = makeStyles((theme) => ({
@@ -79,66 +80,69 @@ export default function SignUp({ setAuth }) {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <HowToRegIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Регистрация
-        </Typography>
-        <form className={classes.form} noValidate onSubmit={onSubmitForm}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="email"
-                label="Email"
-                name="email"
-                autoComplete="email"
-                value={email}
-                onChange={(e) => onChange(e)}
-              />
+    <>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <HowToRegIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Регистрация
+          </Typography>
+          <form className={classes.form} noValidate onSubmit={onSubmitForm}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email"
+                  name="email"
+                  autoComplete="email"
+                  value={email}
+                  onChange={(e) => onChange(e)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Пароль"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(e) => onChange(e)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                >
+                  Зарегистрироваться
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="password"
-                label="Пароль"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                value={password}
-                onChange={(e) => onChange(e)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-              >
-                Зарегистрироваться
-              </Button>
-            </Grid>
-          </Grid>
 
-          <Grid container justify="flex-end">
-            <Grid item>
-              <Link href="/login" variant="body2" color="secondary">
-                Есть аккаунт? Войти
-              </Link>
+            <Grid container justify="flex-end">
+              <Grid item>
+                <Link href="/login" variant="body2" color="secondary">
+                  Есть аккаунт? Войти
+                </Link>
+              </Grid>
             </Grid>
-          </Grid>
-        </form>
-      </div>
-    </Container>
+          </form>
+        </div>
+      </Container>
+      <Footer />
+    </>
   );
 }
