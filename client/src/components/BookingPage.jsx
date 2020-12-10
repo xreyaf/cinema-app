@@ -57,7 +57,7 @@ const BookingPage = () => {
       transform: 'translate(0%, 0%)',
     },
     form: {
-      margin: theme.spacing(4, 0, 0, 0),
+      padding: theme.spacing(4, 0, 0, 0),
     },
     bannerTitle: {
       fontSize: theme.spacing(1.4),
@@ -122,7 +122,7 @@ const BookingPage = () => {
             <BookingSeats />
 
             <Grid container>
-              <Grid item xs={8} md={10}>
+              <Grid item xs={4} md={8}>
                 <Grid container spacing={3} style={{ padding: 20 }}>
                   <Grid item className={classes.hideOnSmall}>
                     <Typography className={classes.bannerTitle}>
@@ -157,6 +157,18 @@ const BookingPage = () => {
                   display: 'flex',
                 }}
               >
+                <Button color="secondary" fullWidth href={`/movies/${id}`}>
+                  Отменить
+                </Button>
+              </Grid>
+              <Grid
+                item
+                xs={4}
+                md={2}
+                style={{
+                  display: 'flex',
+                }}
+              >
                 <Button
                   variant="contained"
                   color="primary"
@@ -164,7 +176,7 @@ const BookingPage = () => {
                   // disabled={seatsAvailable <= 0}
                   // onClick={() => onBookSeats()}
                 >
-                  Checkout
+                  Потвердить
                 </Button>
               </Grid>
             </Grid>

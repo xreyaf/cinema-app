@@ -28,42 +28,56 @@ const useStyles = makeStyles((theme) => ({
   },
   seatInfo: { marginRight: theme.spacing(2) },
   seatInfoLabel: {
-    borderRadius: '2px',
+    borderRadius: '10px',
     marginRight: theme.spacing(1),
     display: 'inline-block',
     width: 13,
     height: 13,
+  },
+  screen: {
+    marginRight: 'auto',
+    marginLeft: 'auto',
+    marginTop: '48px',
+    padding: '1px 0',
+    width: 700,
+    height: 20,
+    backgroundColor: 'rgb(65,66,70)',
+    borderRadius: '8px',
+    textAlign: 'center',
+    textAlignVertical: 'center',
   },
 
   [theme.breakpoints.down('sm')]: {
     seat: { padding: theme.spacing(1.2), margin: theme.spacing(0.5) },
     seatInfoContainer: { width: '100%', display: 'block' },
     seatInfo: { marginTop: theme.spacing(2) },
+    screen: {
+      marginTop: '24px',
+      padding: '1px 0',
+      width: 500,
+    },
   },
 }));
 
 export default function BookingSeats(props) {
   const classes = useStyles(props);
-  // const seats = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+  const seats = [
+    [3, 3, 3, 3, 3, 3, 3, 3, 2, 3],
+    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+    [3, 3, 4, 1, 1, 1, 1, 4, 3, 3],
+    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+    [3, 4, 1, 1, 4, 3, 3, 3, 3, 3],
+    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+  ];
 
   return (
     <>
-      <Box
-        style={{
-          margin: 'auto',
-          padding: '1px 0',
-          width: 500,
-          height: 20,
-          backgroundColor: 'rgb(65,66,70)',
-          borderRadius: '8px',
-          textAlign: 'center',
-          textAlignVertical: 'center',
-        }}
-      >
-        Экран
-      </Box>
-      <Box width={1} pt={15}>
-        {/* {seats.length > 0 &&
+      <Box className={classes.screen}>Экран</Box>
+      <Box width={1} pt={2}>
+        {seats.length > 0 &&
           seats.map((seatRows) => (
             <div className={classes.row}>
               {seatRows.map((seat, index) => (
@@ -75,17 +89,17 @@ export default function BookingSeats(props) {
                       ? 'rgb(65, 66, 70)'
                       : // eslint-disable-next-line no-nested-ternary
                       seat === 2
-                      ? 'rgb(120, 205, 4)'
+                      ? 'rgb(56, 142, 60)'
                       : seat === 3
-                      ? 'rgb(14, 151, 218)'
-                      : 'rgb(96, 93, 169)'
+                      ? 'rgb(96, 93, 169)'
+                      : 'rgb(211, 47, 47)'
                   }
                 >
                   {index + 1}
                 </Box>
               ))}
             </div>
-          ))} */}
+          ))}
       </Box>
       <Box width={1} mt={10}>
         <div className={classes.seatInfoContainer}>
@@ -106,9 +120,16 @@ export default function BookingSeats(props) {
           <div className={classes.seatInfo}>
             <div
               className={classes.seatInfoLabel}
-              style={{ background: 'rgb(120, 205, 4)' }}
+              style={{ background: 'rgb(56, 142, 60)' }}
             />
             Выбранное место
+          </div>
+          <div className={classes.seatInfo}>
+            <div
+              className={classes.seatInfoLabel}
+              style={{ background: 'rgb(211, 47, 47)' }}
+            />
+            Недоступное место
           </div>
         </div>
       </Box>

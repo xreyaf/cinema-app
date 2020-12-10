@@ -1,7 +1,12 @@
 CREATE DATABASE cinemaapp;
 
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS movies;
+DROP TABLE IF EXISTS showtimes;
+DROP TABLE IF EXISTS halls;
+DROP TABLE IF EXISTS reservations;
 
 CREATE TABLE users(
     user_id uuid PRIMARY KEY DEFAULT
@@ -17,6 +22,7 @@ CREATE TABLE movies
   movie_title VARCHAR(255) NOT NULL,
   movie_description TEXT NOT NULL, 
   image_url VARCHAR(255) NOT NULL,
+  back_image_url VARCHAR(255) NOT NULL,
   movie_duration VARCHAR(255) NOT NULL,
   movie_director VARCHAR(100) NOT NULL,
   movie_genre TEXT[] NOT NULL,
@@ -24,13 +30,33 @@ CREATE TABLE movies
   endDate TIMESTAMP NOT NULL
 );
 
-CREATE TABLE showtime
+CREATE TABLE showtimes
 (
-  startAt SERIAL PRIMARY KEY,
-  startDate INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
-  endDate INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
-  movie_id VARCHAR(255) NOT NULL
-  hall_id
+  showtime_id uuid PRIMARY KEY DEFAULT
+    uuid_generate_v4(),
+  startAt TEXT[] NOT NULL,
+  startDate TIMESTAMP NOT NULL,
+  endDate TIMESTAMP NOT NULL ,
+  movie_id uuid NOT NULL REFERENCES movies(movie_id) ON DELETE CASCADE,
+  hall_id uuid NOT NULL REFERENCES halls(hall_id) ON DELETE CASCADE
+);
+
+CREATE TABLE halls (
+    hall_id uuid PRIMARY KEY DEFAULT
+    uuid_generate_v4(),
+    hall_name VARCHAR(100) NOT NULL,
+    ticket_price INTEGER NOT NULL,
+    seats INTEGER[][] NOT NULL,
+    seats_available SMALLINT NOT NULL,
+);
+
+CREATE TABLE reservations (
+    reservation_id uuid PRIMARY KEY DEFAULT
+    uuid_generate_v4(),
+    user_id uuid NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+    showtime_id uuid NOT NULL REFERENCES showtimes(showtime_id) ON DELETE CASCADE
+    ticket_price INTEGER NOT NULL,
+    total INTEGER NOT NULL,
 );
 
 INSERT INTO movies ( movie_title,

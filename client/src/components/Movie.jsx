@@ -56,7 +56,8 @@ const Movie = () => {
     genre: {
       padding: theme.spacing(0.5, 4),
       marginRight: theme.spacing(1.5),
-      border: '2px solid rgba(255,255,255,0.9)',
+      border: '2px solid ',
+      borderColor: '#5f5da9',
       borderRadius: 20,
       [theme.breakpoints.down('sm')]: {
         padding: theme.spacing(0.5, 2),
@@ -69,8 +70,12 @@ const Movie = () => {
         padding: theme.spacing(0, 2, 0, 0),
       },
     },
+    director: {
+      color: theme.palette.primary.light,
+    },
     btn: {
-      border: '2px solid rgba(255,255,255,0.9)',
+      border: '2px solid ',
+      borderColor: '#5f5da9',
       borderRadius: 20,
       padding: theme.spacing(0.7, 4),
       marginRight: theme.spacing(1.5),
@@ -117,7 +122,12 @@ const Movie = () => {
         >
           {selectedMovie.movie_description}
         </Typography>
-        <Typography variant="h5" color="inherit" align="left" gutterBottom>
+        <Typography
+          className={classes.director}
+          variant="h5"
+          align="left"
+          gutterBottom
+        >
           Режиссёр:
           {` `}
           {selectedMovie.movie_director}
