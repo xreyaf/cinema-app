@@ -16,7 +16,24 @@ import {
   BookingSeats,
 } from '.';
 
-const BookingPage = () => {
+const BookingPage = (props) => {
+  const { selectedSeats } = props;
+
+  const [Email, setEmail] = useState('');
+  const getEmail = async () => {
+    try {
+      const res = await fetch('http://localhost:5000/dashboard/', {
+        method: 'GET',
+        headers: { token: localStorage.token },
+      });
+
+      const parseData = await res.json();
+      setEmail(parseData.user_email);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
   const [movie, setMovie] = useState('');
   const { id } = useParams();
   const getMovie = async () => {
@@ -33,14 +50,51 @@ const BookingPage = () => {
     }
   };
 
-  useEffect(() => {
-    getMovie();
-  }, []);
+  const [hall, setHall] = useState('');
+  const getHallData = async () => {
+    try {
+      const res = await fetch(`http://localhost:5000/booking/${id}`, {
+        method: 'GET',
+        headers: { token: localStorage.token },
+      });
 
-  console.log(movie);
+      const parse = await res.json();
+      setHall(parse[0]);
+      console.log(parse[0]);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
+  // const [selectedDate, setSelectedDate] = useState('');
+  const [showtimes, setShowtimes] = useState('');
+  const getShowtimes = async () => {
+    try {
+      const res = await fetch(`http://localhost:5000/booking/showtimes/${id}`, {
+        method: 'GET',
+        headers: { token: localStorage.token },
+      });
+
+      const parse = await res.json();
+      console.log(parse[0]);
+      setShowtimes(parse[0].array_to_string);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
+  useEffect(() => {
+    getEmail();
+    getMovie();
+    getHallData();
+    getShowtimes();
+  }, []);
+  console.log(showtimes);
+  // onChangeDate = (date) => setSelectedDate(date);
+
   const useStyles = makeStyles((theme) => ({
     blurBackground: {
-      backgroundImage: `linear-gradient(to right, rgba(0,0,0,.7) 10%, rgba(0,0,0,.7) 10%),url(${movie.image_url})`,
+      backgroundImage: `linear-gradient(to right, rgba(0,0,0,.7) 10%, rgba(0,0,0,.7) 10%),url(${movie.back_image_url})`,
       position: 'absolute',
       top: 0,
       zIndex: -1,
@@ -67,13 +121,16 @@ const BookingPage = () => {
     },
     bannerContent: {
       fontSize: theme.spacing(2),
-      textTransform: 'capitalize',
+
       color: theme.palette.common.white,
     },
     [theme.breakpoints.down('sm')]: {
       hideOnSmall: {
         display: 'none',
       },
+    },
+    checkout: {
+      padding: theme.spacing(4, 0, 0, 0),
     },
   }));
 
@@ -87,21 +144,23 @@ const BookingPage = () => {
               <Grid item xs>
                 <TextField
                   fullWidth
-                  select
-                  label="Выбрать зал"
+                  disabled
+                  value={`${hall.hall_name} зал`}
                   variant="outlined"
-                >
-                  <MenuItem>{` `}</MenuItem>
-                </TextField>
+                />
               </Grid>
               <Grid item xs>
                 <MuiPickersUtilsProvider utils={MomentUtils}>
                   <KeyboardDatePicker
+                    disableToolbar
+                    variant="inline"
                     inputVariant="outlined"
                     margin="none"
                     fullWidth
                     id="start-date"
                     label="Дата сеанса"
+                    // value={selectedDate}
+                    // onChange={(date) => onChangeDate(date._d)}
                     // minDate={new Date(showtime.startDate)}
                     // maxDate={new Date(showtime.endDate)}
                   />
@@ -110,18 +169,25 @@ const BookingPage = () => {
               <Grid item xs>
                 <TextField
                   fullWidth
+                  disabled
                   select
                   label="Время сеанса"
                   variant="outlined"
                 >
-                  <MenuItem>{` `}</MenuItem>
+                  {showtimes.length > 0 &&
+                    showtimes.split(',').map((time) => (
+                      // eslint-disable-next-line react/no-array-index-key
+                      <MenuItem key={`${time}`} value={time}>
+                        {time}
+                      </MenuItem>
+                    ))}
                 </TextField>
               </Grid>
             </Grid>
 
             <BookingSeats />
 
-            <Grid container>
+            <Grid container className={classes.checkout}>
               <Grid item xs={4} md={8}>
                 <Grid container spacing={3} style={{ padding: 20 }}>
                   <Grid item className={classes.hideOnSmall}>
@@ -129,7 +195,16 @@ const BookingPage = () => {
                       Email
                     </Typography>
                     <Typography className={classes.bannerContent}>
-                      {` `}
+                      {Email}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography className={classes.bannerTitle}>
+                      Цена
+                    </Typography>
+                    <Typography className={classes.bannerContent}>
+                      {hall.ticket_price}
+                      {' \u20BD'}
                     </Typography>
                   </Grid>
 
@@ -137,15 +212,24 @@ const BookingPage = () => {
                     <Typography className={classes.bannerTitle}>
                       Билеты
                     </Typography>
-                    <Typography className={classes.bannerContent}>0</Typography>
+                    {selectedSeats > 0 ? (
+                      <Typography className={classes.bannerContent}>
+                        {selectedSeats}
+                        {`штук`}
+                      </Typography>
+                    ) : (
+                      <Typography className={classes.bannerContent}>
+                        0
+                      </Typography>
+                    )}
                   </Grid>
                   <Grid item>
                     <Typography className={classes.bannerTitle}>
                       Цена
                     </Typography>
-                    {/* <Typography className={classes.bannerContent}>
-                  {ticketPrice * selectedSeats} &euro;
-                </Typography> */}
+                    <Typography className={classes.bannerContent}>
+                      {hall.ticket_price * selectedSeats}
+                    </Typography>
                   </Grid>
                 </Grid>
               </Grid>
@@ -173,8 +257,8 @@ const BookingPage = () => {
                   variant="contained"
                   color="primary"
                   fullWidth
-                  // disabled={seatsAvailable <= 0}
-                  // onClick={() => onBookSeats()}
+                  disabled={selectedSeats > 0}
+                  // onClick={() => checkout()}
                 >
                   Потвердить
                 </Button>

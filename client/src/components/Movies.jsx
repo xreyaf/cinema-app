@@ -36,6 +36,7 @@ const Movies = () => {
     try {
       const res = await fetch('http://localhost:5000/movies', {
         method: 'GET',
+        headers: { token: localStorage.token },
       });
 
       const parseData = await res.json();

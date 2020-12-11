@@ -2,7 +2,7 @@ const router = require("express").Router();
 const authorization = require("../middleware/authorization");
 const pool = require("../db");
 
-router.get("/", async (req, res) => {
+router.get("/", authorization, async (req, res) => {
 	try {
 		const movies = await pool.query("SELECT * FROM movies");
 		res.json(movies.rows);
@@ -12,7 +12,7 @@ router.get("/", async (req, res) => {
 	}
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", authorization, async (req, res) => {
 	const { id } = req.params;
 	try {
 		const movie = await pool.query("SELECT * FROM movies WHERE movie_id = $1", [

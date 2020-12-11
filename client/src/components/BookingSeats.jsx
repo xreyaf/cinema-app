@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { makeStyles } from '@material-ui/styles';
 import { Box } from '.';
 
@@ -16,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(0.5),
     fontWeight: 600,
     '&:hover': {
-      background: 'rgb(120, 205, 4)',
+      background: 'rgb(56, 142, 60)',
     },
   },
   seatInfoContainer: {
@@ -61,27 +62,71 @@ const useStyles = makeStyles((theme) => ({
 
 export default function BookingSeats(props) {
   const classes = useStyles(props);
-  const seats = [
-    [3, 3, 3, 3, 3, 3, 3, 3, 2, 3],
-    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-    [3, 3, 4, 1, 1, 1, 1, 4, 3, 3],
-    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-    [3, 4, 1, 1, 4, 3, 3, 3, 3, 3],
-    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-  ];
+
+  const [seats, setSeats] = useState('');
+
+  const [selectedSeats, setSelectedSeats] = useState('');
+
+  const { id } = useParams();
+  let newSeats = [1];
+  let count = 0;
+
+  function onSelectSeat(row, seat) {
+    if (seats.length !== 0) {
+      newSeats = [...seats];
+
+      if (seats[row][seat] === 1) {
+        newSeats[row][seat] = 1;
+      } else if (seats[row][seat] === 2) {
+        newSeats[row][seat] = 3;
+      } else if (seats[row][seat] === 3) {
+        newSeats[row][seat] = 2;
+      } else {
+        newSeats[row][seat] = 4;
+      }
+      setSelectedSeats([row, seat]);
+      seats[row][seat] = newSeats[row][seat];
+      setSeats(seats);
+      console.log(seats);
+      console.log(selectedSeats);
+      count = 1;
+    }
+  }
+  const getSeats = async () => {
+    try {
+      const res = await fetch(`http://localhost:5000/booking/${id}`, {
+        method: 'GET',
+        headers: { token: localStorage.token },
+      });
+
+      const parse = await res.json();
+      setSeats(parse[0].seats);
+      console.log(parse[0].seats);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+  useEffect(() => {
+    getSeats();
+  }, []);
+
+  useEffect(() => {
+    onSelectSeat();
+  }, [count]);
 
   return (
     <>
       <Box className={classes.screen}>Экран</Box>
       <Box width={1} pt={2}>
         {seats.length > 0 &&
-          seats.map((seatRows) => (
-            <div className={classes.row}>
+          seats.map((seatRows, indexRow) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <div key={indexRow} className={classes.row}>
               {seatRows.map((seat, index) => (
                 <Box
+                  // eslint-disable-next-line react/no-array-index-key
+                  key={`seat-${index}`}
+                  onClick={() => onSelectSeat(indexRow, index)}
                   className={classes.seat}
                   bgcolor={
                     // eslint-disable-next-line no-nested-ternary
@@ -101,7 +146,7 @@ export default function BookingSeats(props) {
             </div>
           ))}
       </Box>
-      <Box width={1} mt={10}>
+      <Box width={1} mt={4}>
         <div className={classes.seatInfoContainer}>
           <div className={classes.seatInfo}>
             <div
