@@ -3,8 +3,10 @@ export { default as Dashboard } from './Dashboard';
 export { default as SignIn } from './SignIn';
 export { default as SignUp } from './SignUp';
 export { default as Footer } from './Footer';
+export { default as Header } from './Header';
 export { default as Movies } from './Movies';
 export { default as Movie } from './Movie';
+export { default as MyTickets } from './MyTickets';
 export { default as BookingPage } from './BookingPage';
 export { default as BookingSeats } from './BookingSeats';
 

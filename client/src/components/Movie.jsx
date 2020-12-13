@@ -49,9 +49,6 @@ const Movie = () => {
       transform: 'translate(0%, 0%)',
       padding: theme.spacing(30, 2, 0, 2),
       margin: theme.spacing(0, 50, 0, 0),
-      [theme.breakpoints.down('sm')]: {
-        padding: theme.spacing(15, 2, 0, 2),
-      },
     },
     genre: {
       padding: theme.spacing(0.5, 4),
@@ -66,9 +63,6 @@ const Movie = () => {
     description: {
       mixBlendMode: 'difference',
       padding: theme.spacing(0, 50, 0, 0),
-      [theme.breakpoints.down('sm')]: {
-        padding: theme.spacing(0, 2, 0, 0),
-      },
     },
     director: {
       color: theme.palette.primary.light,
@@ -81,9 +75,8 @@ const Movie = () => {
       marginRight: theme.spacing(1.5),
     },
     [theme.breakpoints.down('sm')]: {
-      hideOnSmall: {
-        display: 'none',
-      },
+      movieInfo: { padding: theme.spacing(15, 2, 0, 2) },
+      description: { padding: theme.spacing(0, 10, 0, 0) },
     },
   }));
 

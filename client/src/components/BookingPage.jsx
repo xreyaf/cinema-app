@@ -9,17 +9,17 @@ import MomentUtils from '@date-io/moment';
 import {
   Container,
   Grid,
-  MenuItem,
+  // MenuItem,
   TextField,
   Typography,
   Button,
   BookingSeats,
 } from '.';
 
-const BookingPage = (props) => {
-  const { selectedSeats } = props;
+const BookingPage = () => {
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
-  const [Email, setEmail] = useState('');
+  const [email, setEmail] = useState('');
   const getEmail = async () => {
     try {
       const res = await fetch('http://localhost:5000/dashboard/', {
@@ -50,8 +50,8 @@ const BookingPage = (props) => {
     }
   };
 
-  const [hall, setHall] = useState('');
-  const getHallData = async () => {
+  const [hallScheme, setHallScheme] = useState('');
+  const getHallSchemeData = async () => {
     try {
       const res = await fetch(`http://localhost:5000/booking/${id}`, {
         method: 'GET',
@@ -59,14 +59,13 @@ const BookingPage = (props) => {
       });
 
       const parse = await res.json();
-      setHall(parse[0]);
-      console.log(parse[0]);
+      setHallScheme(parse[0]);
+      console.log(parse[0].hallscheme_id);
     } catch (err) {
       console.error(err.message);
     }
   };
 
-  // const [selectedDate, setSelectedDate] = useState('');
   const [showtimes, setShowtimes] = useState('');
   const getShowtimes = async () => {
     try {
@@ -76,8 +75,26 @@ const BookingPage = (props) => {
       });
 
       const parse = await res.json();
+
+      setShowtimes(parse[0]);
       console.log(parse[0]);
-      setShowtimes(parse[0].array_to_string);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
+  const [seats, setSeats] = useState('');
+  const [selectedSeats, setSelectedSeats] = useState('');
+  const getSeats = async () => {
+    try {
+      const res = await fetch(`http://localhost:5000/booking/${id}`, {
+        method: 'GET',
+        headers: { token: localStorage.token },
+      });
+
+      const parse = await res.json();
+      setSeats(parse[0].seats);
+      console.log(parse[0].seats);
     } catch (err) {
       console.error(err.message);
     }
@@ -86,11 +103,59 @@ const BookingPage = (props) => {
   useEffect(() => {
     getEmail();
     getMovie();
-    getHallData();
+    getHallSchemeData();
     getShowtimes();
+    getSeats();
   }, []);
-  console.log(showtimes);
-  // onChangeDate = (date) => setSelectedDate(date);
+
+  const [newSeats, setNewSeats] = useState('');
+  const updateHallScheme = async () => {
+    try {
+      const body = { newSeats };
+      const myHeaders = new Headers();
+
+      myHeaders.append('Content-Type', 'application/json');
+      myHeaders.append('token', localStorage.token);
+
+      await fetch(
+        `http://localhost:5000/booking/hallschemes/${hallScheme.hallscheme_id}`,
+        {
+          method: 'PUT',
+          headers: myHeaders,
+          body: JSON.stringify(body),
+        }
+      );
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
+  const [count, setCount] = useState(0);
+  function onSelectSeat(row, seat) {
+    setNewSeats(seats);
+    if (seats[row][seat] === 1) {
+      newSeats[row][seat] = 1;
+    } else if (seats[row][seat] === 2) {
+      newSeats[row][seat] = 3;
+      setCount(count - 1);
+    } else if (seats[row][seat] === 3) {
+      newSeats[row][seat] = 2;
+      setCount(count + 1);
+    } else {
+      newSeats[row][seat] = 4;
+    }
+    setSelectedSeats([row, seat]);
+    setNewSeats(newSeats);
+    console.log(selectedSeats);
+    console.log(newSeats);
+    console.log(selectedDate);
+  }
+
+  function onConfirmBook() {
+    console.log(hallScheme.hallscheme_id);
+    console.log(newSeats);
+    updateHallScheme();
+  }
 
   const useStyles = makeStyles((theme) => ({
     blurBackground: {
@@ -141,11 +206,11 @@ const BookingPage = (props) => {
         <Grid container spacing={3}>
           <Grid item xs={12} md={12}>
             <Grid className={classes.form} container spacing={3}>
-              <Grid item xs>
+              <Grid item xs className={classes.hideOnSmall}>
                 <TextField
                   fullWidth
                   disabled
-                  value={`${hall.hall_name} зал`}
+                  value={`${hallScheme.hall_name} зал`}
                   variant="outlined"
                 />
               </Grid>
@@ -159,10 +224,10 @@ const BookingPage = (props) => {
                     fullWidth
                     id="start-date"
                     label="Дата сеанса"
-                    // value={selectedDate}
-                    // onChange={(date) => onChangeDate(date._d)}
-                    // minDate={new Date(showtime.startDate)}
-                    // maxDate={new Date(showtime.endDate)}
+                    minDate={new Date(showtimes.start_date)}
+                    maxDate={new Date(showtimes.end_date)}
+                    value={selectedDate}
+                    onChange={(date) => setSelectedDate(date)}
                   />
                 </MuiPickersUtilsProvider>
               </Grid>
@@ -170,22 +235,25 @@ const BookingPage = (props) => {
                 <TextField
                   fullWidth
                   disabled
-                  select
-                  label="Время сеанса"
+                  // select
+                  value={showtimes.start_at}
                   variant="outlined"
                 >
-                  {showtimes.length > 0 &&
+                  {/* {showtimes.length > 0 &&
                     showtimes.split(',').map((time) => (
                       // eslint-disable-next-line react/no-array-index-key
                       <MenuItem key={`${time}`} value={time}>
                         {time}
                       </MenuItem>
-                    ))}
+                    ))} */}
                 </TextField>
               </Grid>
             </Grid>
 
-            <BookingSeats />
+            <BookingSeats
+              seats={seats}
+              onSelectSeat={(indexRow, index) => onSelectSeat(indexRow, index)}
+            />
 
             <Grid container className={classes.checkout}>
               <Grid item xs={4} md={8}>
@@ -195,27 +263,26 @@ const BookingPage = (props) => {
                       Email
                     </Typography>
                     <Typography className={classes.bannerContent}>
-                      {Email}
+                      {email}
                     </Typography>
                   </Grid>
                   <Grid item>
                     <Typography className={classes.bannerTitle}>
-                      Цена
+                      Цена билета
                     </Typography>
                     <Typography className={classes.bannerContent}>
-                      {hall.ticket_price}
+                      {showtimes.ticket_price}
                       {' \u20BD'}
                     </Typography>
                   </Grid>
 
-                  <Grid item>
+                  <Grid item className={classes.hideOnSmall}>
                     <Typography className={classes.bannerTitle}>
                       Билеты
                     </Typography>
-                    {selectedSeats > 0 ? (
+                    {count > 0 ? (
                       <Typography className={classes.bannerContent}>
-                        {selectedSeats}
-                        {`штук`}
+                        {count}
                       </Typography>
                     ) : (
                       <Typography className={classes.bannerContent}>
@@ -225,10 +292,11 @@ const BookingPage = (props) => {
                   </Grid>
                   <Grid item>
                     <Typography className={classes.bannerTitle}>
-                      Цена
+                      Итого
                     </Typography>
                     <Typography className={classes.bannerContent}>
-                      {hall.ticket_price * selectedSeats}
+                      {showtimes.ticket_price * count}
+                      {' \u20BD'}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -241,7 +309,7 @@ const BookingPage = (props) => {
                   display: 'flex',
                 }}
               >
-                <Button color="secondary" fullWidth href={`/movies/${id}`}>
+                <Button color="inherit" fullWidth href={`/movies/${id}`}>
                   Отменить
                 </Button>
               </Grid>
@@ -258,7 +326,7 @@ const BookingPage = (props) => {
                   color="primary"
                   fullWidth
                   disabled={selectedSeats > 0}
-                  // onClick={() => checkout()}
+                  onClick={() => onConfirmBook()}
                 >
                   Потвердить
                 </Button>

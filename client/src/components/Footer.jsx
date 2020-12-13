@@ -5,7 +5,7 @@ import { Typography, Link, Container } from '.';
 const useStyles = makeStyles((theme) => ({
   footer: {
     background: 'transparant',
-    padding: theme.spacing(5, 0, 5, 0),
+    padding: theme.spacing(2, 0, 0, 0),
     margin: 'initial',
   },
 }));
@@ -16,8 +16,11 @@ export default function Footer() {
     <footer className={classes.footer}>
       <Container maxWidth="lg">
         <Typography variant="body2" color="textSecondary" align="center">
-          CINEMA APP
-          {` `}
+          {' '}
+          <Link href="/" color="inherit">
+            CINEMA APP
+          </Link>
+          {`  `}
           {`© `}
           {new Date().getFullYear()}
           {` `}

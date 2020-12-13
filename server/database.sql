@@ -5,7 +5,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS movies CASCADE;
 DROP TABLE IF EXISTS showtimes CASCADE;
-DROP TABLE IF EXISTS halls CASCADE;
+DROP TABLE IF EXISTS hallschemes CASCADE;
 DROP TABLE IF EXISTS reservations CASCADE;
 
 CREATE TABLE IF NOT EXISTS users(
@@ -26,8 +26,15 @@ CREATE TABLE IF NOT EXISTS movies
   movie_duration VARCHAR(255) NOT NULL,
   movie_director VARCHAR(100) NOT NULL,
   movie_genre TEXT[] NOT NULL,
-  release_date TIMESTAMP NOT NULL,
-  end_date TIMESTAMP NOT NULL
+  release_date DATE NOT NULL,
+  end_date DATE NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS hallschemes (
+    hallscheme_id uuid PRIMARY KEY DEFAULT
+    uuid_generate_v4(),
+    hall_name VARCHAR(100) NOT NULL,
+    seats INTEGER[][] NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS showtimes
@@ -35,18 +42,11 @@ CREATE TABLE IF NOT EXISTS showtimes
   showtime_id uuid PRIMARY KEY DEFAULT
     uuid_generate_v4(),
   ticket_price INTEGER NOT NULL,
-  startAt VARCHAR(255) NOT NULL,
+  start_at VARCHAR(255) NOT NULL,
   start_date TIMESTAMP NOT NULL,
   end_date TIMESTAMP NOT NULL ,
   movie_id uuid NOT NULL REFERENCES movies(movie_id) ON DELETE CASCADE,
-  hall_id uuid NOT NULL REFERENCES halls(hall_id) ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS halls (
-    hall_id uuid PRIMARY KEY DEFAULT
-    uuid_generate_v4(),
-    hall_name VARCHAR(100) NOT NULL,
-    seats INTEGER[][] NOT NULL,
+  hallscheme_id uuid NOT NULL REFERENCES hallschemes(hallscheme_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS reservations (
@@ -54,10 +54,10 @@ CREATE TABLE IF NOT EXISTS reservations (
     uuid_generate_v4(),
     user_id uuid NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
     showtime_id uuid NOT NULL REFERENCES showtimes(showtime_id) ON DELETE CASCADE,
+    booked_seats INTEGER[][] NOT NULL,
+    start_date DATE NOT NULL,
     total INTEGER NOT NULL
 );
-
-
 
 INSERT INTO movies ( movie_title,
   movie_description,
@@ -68,7 +68,7 @@ INSERT INTO movies ( movie_title,
      movie_genre,
       release_date,
        end_date )
- VALUES ('Джокер','Готэм, начало 1980-х годов. Комик Артур Флек живет с больной матерью, которая с детства учит его «ходить с улыбкой». Пытаясь нести в мир хорошее и дарить людям радость, Артур сталкивается с человеческой жестокостью и постепенно приходит к выводу, что этот мир получит от него не добрую улыбку, а ухмылку злодея Джокера.','https://image.tmdb.org/t/p/original/hw1CwteUFGjcWXwjGhKk8UJpWeA.jpg','https://image.tmdb.org/t/p/original/rlay2M5QYvi6igbGcFjq8jxeusY.jpg','122','Тодд Филлипс','{"Триллер","Драмма","Криминал"}','2020-12-01 19:10:25-07','2020-12-05 19:10:25-07');
+ VALUES ('Джокер','Готэм, начало 1980-х годов. Комик Артур Флек живет с больной матерью, которая с детства учит его «ходить с улыбкой». Пытаясь нести в мир хорошее и дарить людям радость, Артур сталкивается с человеческой жестокостью и постепенно приходит к выводу, что этот мир получит от него не добрую улыбку, а ухмылку злодея Джокера.','https://image.tmdb.org/t/p/original/n6bUvigpRFqSwmPp1m2YADdbRBc.jpg','https://image.tmdb.org/t/p/original/rlay2M5QYvi6igbGcFjq8jxeusY.jpg','122','Тодд Филлипс','{"Триллер","Драмма","Криминал"}','2020-12-01 19:10:25-07','2020-12-05 19:10:25-07');
 INSERT INTO movies ( movie_title,
   movie_description,
   image_url,
@@ -120,17 +120,22 @@ INSERT INTO movies ( movie_title,
        end_date )
  VALUES ('Кролик Джоджо','Гитлеровская Германия. У немного стеснительного 10-летнего Йоханнеса Бетслера, члена Гитлерюгенда и большого поклонника официального курса, есть лучший друг - воображаемый Адольф Гитлер. Хоть мальчик сам ещё никак не научится завязывать шнурки, он отправляется на выходные в военно-патриотический лагерь, где, не решившись убить кролика, получает прозвище Кролик Джоджо. А после, пытаясь доказать окружающим свою смелость, парень случайно подрывается на гранате. Но вскоре у Джоджо появится более веская причина для волнения, чем собственные шрамы, - он выясняет, что мама прячет в доме еврейскую девушку.','https://image.tmdb.org/t/p/original/agoBZfL1q5G79SD0npArSlJn8BH.jpg','https://image.tmdb.org/t/p/original/8CX2kCBV9x5ASTQ3ipLToz6TtCa.jpg','108','Тайка Вайтити','{"Драма", "Комедия", "Военный", "История"}','2020-12-01 19:10:25-07','2020-12-05 19:10:25-07');
 
-INSERT INTO halls (
+INSERT INTO hallschemes (
   hall_name,
   seats )
  VALUES ('Первый', '{{3,3,3,3,3,3,3,3,3,3},{3,3,3,3,3,3,3,3,3,3},{3,3,3,3,3,3,3,3,3,3},{3,3,3,3,3,3,3,3,3,3},{3,3,3,3,3,3,3,3,3,3},{3,3,3,3,3,3,3,3,3,3},{3,3,3,3,3,3,3,3,3,3},{4,4,3,3,3,3,3,3,4,4},{4,4,3,3,3,3,3,3,4,4}}');
-INSERT INTO halls (
+INSERT INTO hallschemes (
   hall_name,
   seats )
  VALUES ('Второй', '{{3,3,3,3,3,3,3,3,3,3},{3,3,3,3,3,3,3,3,3,3},{3,3,3,3,3,3,3,3,3,3},{3,3,3,3,3,3,3,3,3,3},{3,3,3,3,3,3,3,3,3,3},{3,3,3,3,3,3,3,3,3,3},{3,3,3,3,3,3,3,3,3,3},{3,3,3,3,3,3,3,3,3,3},{3,3,3,3,3,3,3,3,3,3}}');
 
- INSERT INTO halls (
+ INSERT INTO hallschemes (
   hall_name,
   seats )
  VALUES ('Третий', '{{4,4,4,4,4,4,4,4,4,4},{3,3,3,3,3,3,3,3,3,3},{3,3,3,3,3,3,3,3,3,3},{3,3,3,3,3,3,3,3,3,3},{3,3,3,3,3,3,3,3,3,3},{3,3,3,3,3,3,3,3,3,3},{3,3,3,3,3,3,3,3,3,3},{3,3,3,3,3,3,3,3,3,3},{3,3,3,3,3,3,3,3,3,3}}');
 
+select startat from showtimes where movie_id='f8facf7c-ec1f-4c59-b818-f547d3830e9c';
+
+SELECT ARRAY[startat] FROM showtimes  WHERE movie_id='f8facf7c-ec1f-4c59-b818-f547d3830e9c';
+
+select array_to_string(ARRAY(select DISTINCT startat from showtimes WHERE movie_id='f8facf7c-ec1f-4c59-b818-f547d3830e9c' ORDER BY startat), ',');

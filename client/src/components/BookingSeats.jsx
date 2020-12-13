@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { Box } from '.';
 
@@ -38,7 +37,8 @@ const useStyles = makeStyles((theme) => ({
   screen: {
     marginRight: 'auto',
     marginLeft: 'auto',
-    marginTop: '48px',
+    marginTop: theme.spacing(4),
+    marginBottom: theme.spacing(2),
     padding: '1px 0',
     width: 700,
     height: 20,
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   [theme.breakpoints.down('sm')]: {
-    seat: { padding: theme.spacing(1.2), margin: theme.spacing(0.5) },
+    seat: { padding: theme.spacing(1.5), margin: theme.spacing(0.5) },
     seatInfoContainer: { width: '100%', display: 'block' },
     seatInfo: { marginTop: theme.spacing(2) },
     screen: {
@@ -62,57 +62,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function BookingSeats(props) {
   const classes = useStyles(props);
-
-  const [seats, setSeats] = useState('');
-
-  const [selectedSeats, setSelectedSeats] = useState('');
-
-  const { id } = useParams();
-  let newSeats = [1];
-  let count = 0;
-
-  function onSelectSeat(row, seat) {
-    if (seats.length !== 0) {
-      newSeats = [...seats];
-
-      if (seats[row][seat] === 1) {
-        newSeats[row][seat] = 1;
-      } else if (seats[row][seat] === 2) {
-        newSeats[row][seat] = 3;
-      } else if (seats[row][seat] === 3) {
-        newSeats[row][seat] = 2;
-      } else {
-        newSeats[row][seat] = 4;
-      }
-      setSelectedSeats([row, seat]);
-      seats[row][seat] = newSeats[row][seat];
-      setSeats(seats);
-      console.log(seats);
-      console.log(selectedSeats);
-      count = 1;
-    }
-  }
-  const getSeats = async () => {
-    try {
-      const res = await fetch(`http://localhost:5000/booking/${id}`, {
-        method: 'GET',
-        headers: { token: localStorage.token },
-      });
-
-      const parse = await res.json();
-      setSeats(parse[0].seats);
-      console.log(parse[0].seats);
-    } catch (err) {
-      console.error(err.message);
-    }
-  };
-  useEffect(() => {
-    getSeats();
-  }, []);
-
-  useEffect(() => {
-    onSelectSeat();
-  }, [count]);
+  const { seats, onSelectSeat } = props;
 
   return (
     <>
