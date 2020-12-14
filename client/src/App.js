@@ -8,6 +8,9 @@ import {
   SignUp,
   CssBaseline,
   useMediaQuery,
+  Movie,
+  BookingPage,
+  MyTickets,
 } from './components';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -125,7 +128,9 @@ export default function App() {
               )
             }
           />
-          {/* <PrivateRoute path="/dashboard/my-tickets" component={MyTickets}/> */}
+          <Route path="/movies/:id" component={Movie} />
+          <Route path="/booking/:id" component={BookingPage} />
+          <Route path="/dashboard/myTickets" component={MyTickets} />
           <Route path="*" component={() => '404 NOT FOUND'} />
         </Switch>
       </BrowserRouter>
