@@ -6,7 +6,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import { CssBaseline, Footer, Container, Typography, Grid, Button } from '.';
+import { CssBaseline, Footer, Container, Typography, Grid } from '.';
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -34,9 +34,9 @@ const useStyles = makeStyles((theme) => ({
 
 const MyTickets = () => {
   const classes = useStyles();
-  // const [reservations, setReservations] = useState('');
-  const [email, setEmail] = useState('');
 
+  const [email, setEmail] = useState('');
+  const [userId, setUserId] = useState('');
   const getEmail = async () => {
     try {
       const res = await fetch('http://localhost:5000/dashboard/', {
@@ -46,41 +46,36 @@ const MyTickets = () => {
 
       const parseData = await res.json();
       setEmail(parseData.user_email);
+      setUserId(parseData.user_id);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+  console.log(userId);
+  const [reservations, setReservations] = useState();
+  const getReservations = async () => {
+    try {
+      const res = await fetch(
+        `http://localhost:5000/reservations/user/${userId}`,
+        {
+          method: 'GET',
+          headers: { token: localStorage.token },
+        }
+      );
+
+      const parseData = await res.json();
+      setReservations(parseData);
+      console.log(parseData);
     } catch (err) {
       console.error(err.message);
     }
   };
 
-  // const getReservations = async () => {
-  //   try {
-  //     const res = await fetch(`http://localhost:5000/myTickets/${id}`, {
-  //       method: 'GET',
-  //       headers: { token: localStorage.token },
-  //     });
-
-  //     const parseData = await res.json();
-  //     setReservations(parseData);
-  //   } catch (err) {
-  //     console.error(err.message);
-  //   }
-  // };
-
+  console.log(reservations);
   useEffect(() => {
-    // getReservations();
     getEmail();
-  }, []);
-
-  function createData(movieTitle, date, startAt, ticketPrice, total) {
-    return { movieTitle, date, startAt, ticketPrice, total };
-  }
-
-  const reservations = [
-    createData('Джокер', '2020-12-07 00:00:00', '13:30', 120, 360),
-    createData('Достать ножи', '2020-12-07 00:00:00', '13:30', 120, 360),
-    createData('Паразиты', '2020-12-07 00:00:00', '13:30', 120, 360),
-    createData('Кролик ДжоДжо', '2020-12-07 00:00:00', '13:30', 120, 360),
-    createData('Джентельмены', '2020-12-07 00:00:00', '13:30', 120, 360),
-  ];
+    getReservations();
+  }, [userId]);
 
   return (
     <>
@@ -106,34 +101,44 @@ const MyTickets = () => {
                     <TableCell align="left">Название фильма</TableCell>
                     <TableCell align="left">Дата</TableCell>
                     <TableCell align="left">Время начала</TableCell>
+                    <TableCell align="left">Билеты</TableCell>
                     <TableCell align="left">Стоимость билета</TableCell>
                     <TableCell align="left">Итого</TableCell>
-                    <TableCell align="left" />
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {reservations.map((reservation) => (
-                    <TableRow className={classes.tableRow} hover>
-                      <TableCell className={classes.tableCell}>
-                        {reservation.movieTitle}
-                      </TableCell>
-                      <TableCell className={classes.tableCell}>
-                        {new Date(reservation.date).toLocaleDateString()}
-                      </TableCell>
-                      <TableCell className={classes.tableCell}>
-                        {reservation.startAt}
-                      </TableCell>
-                      <TableCell className={classes.tableCell}>
-                        {reservation.ticketPrice}
-                      </TableCell>
-                      <TableCell className={classes.tableCell}>
-                        {reservation.total}
-                      </TableCell>
-                      <TableCell className={classes.tableCell}>
-                        <Button disabled>Отменить</Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {reservations !== undefined ? (
+                    reservations.map((reservation) => (
+                      <TableRow className={classes.tableRow} hover>
+                        <TableCell className={classes.tableCell}>
+                          {reservation.movie_title}
+                        </TableCell>
+
+                        <TableCell className={classes.tableCell}>
+                          {new Date(
+                            reservation.start_date
+                          ).toLocaleDateString()}
+                        </TableCell>
+                        <TableCell className={classes.tableCell}>
+                          {reservation.start_at}
+                        </TableCell>
+                        <TableCell className={classes.tableCell}>
+                          {reservation.booked_seats.map(
+                            (item) => `ряд:${item[0] + 1}
+                             место: ${item[1] + 1}; `
+                          )}
+                        </TableCell>
+                        <TableCell className={classes.tableCell}>
+                          {reservation.ticket_price}
+                        </TableCell>
+                        <TableCell className={classes.tableCell}>
+                          {reservation.total}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <p>Билетов нет</p>
+                  )}
                 </TableBody>
               </Table>
             </TableContainer>

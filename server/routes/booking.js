@@ -35,10 +35,11 @@ router.get("/showtimes/:id", authorization, async (req, res) => {
 // Обнволение схемы зала
 router.put("/hallschemes/:id", authorization, async (req, res) => {
 	try {
-		const { hallscheme_id } = req.params;
-		const { seats } = req.body;
+		const hallscheme_id = req.params.id;
+		const seats = req.body.newSeats;
+		console.log(hallscheme_id);
 		const updateHallscheme = await pool.query(
-			"UPDATE hallschemes SET seats = $1 WHERE hallscheme_id = $2 RETURNING *",
+			"UPDATE hallschemes SET seats = $1 WHERE hallscheme_id = $2 ",
 			[seats, hallscheme_id]
 		);
 

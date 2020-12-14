@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { makeStyles } from '@material-ui/styles';
@@ -20,6 +21,7 @@ const BookingPage = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   const [email, setEmail] = useState('');
+  const [userId, setUserId] = useState('');
   const getEmail = async () => {
     try {
       const res = await fetch('http://localhost:5000/dashboard/', {
@@ -29,6 +31,7 @@ const BookingPage = () => {
 
       const parseData = await res.json();
       setEmail(parseData.user_email);
+      setUserId(parseData.user_id);
     } catch (err) {
       console.error(err.message);
     }
@@ -66,8 +69,8 @@ const BookingPage = () => {
     }
   };
 
-  const [showtimes, setShowtimes] = useState('');
-  const getShowtimes = async () => {
+  const [showtime, setShowtime] = useState('');
+  const getShowtime = async () => {
     try {
       const res = await fetch(`http://localhost:5000/booking/showtimes/${id}`, {
         method: 'GET',
@@ -76,7 +79,7 @@ const BookingPage = () => {
 
       const parse = await res.json();
 
-      setShowtimes(parse[0]);
+      setShowtime(parse[0]);
       console.log(parse[0]);
     } catch (err) {
       console.error(err.message);
@@ -85,6 +88,8 @@ const BookingPage = () => {
 
   const [seats, setSeats] = useState('');
   const [selectedSeats, setSelectedSeats] = useState('');
+  const [newSeats, setNewSeats] = useState('');
+  let bookedSeats = [];
   const getSeats = async () => {
     try {
       const res = await fetch(`http://localhost:5000/booking/${id}`, {
@@ -94,6 +99,7 @@ const BookingPage = () => {
 
       const parse = await res.json();
       setSeats(parse[0].seats);
+      setNewSeats(parse[0].seats);
       console.log(parse[0].seats);
     } catch (err) {
       console.error(err.message);
@@ -104,16 +110,26 @@ const BookingPage = () => {
     getEmail();
     getMovie();
     getHallSchemeData();
-    getShowtimes();
+    getShowtime();
     getSeats();
   }, []);
 
-  const [newSeats, setNewSeats] = useState('');
   const updateHallScheme = async () => {
     try {
+      // eslint-disable-next-line no-restricted-syntax
+      for (let i = 0; i < newSeats.length; i += 1) {
+        // eslint-disable-next-line no-restricted-syntax
+        for (let j = 0; j < newSeats[i].length; j += 1) {
+          // eslint-disable-next-line eqeqeq
+          if (newSeats[i][j] === 2) {
+            newSeats[i][j] = 1;
+            bookedSeats.push([i, j]);
+          }
+        }
+      }
       const body = { newSeats };
       const myHeaders = new Headers();
-
+      console.log(body);
       myHeaders.append('Content-Type', 'application/json');
       myHeaders.append('token', localStorage.token);
 
@@ -131,30 +147,60 @@ const BookingPage = () => {
   };
 
   const [count, setCount] = useState(0);
+  const [total, setTotal] = useState(0);
   function onSelectSeat(row, seat) {
-    setNewSeats(seats);
-    if (seats[row][seat] === 1) {
-      newSeats[row][seat] = 1;
-    } else if (seats[row][seat] === 2) {
-      newSeats[row][seat] = 3;
-      setCount(count - 1);
-    } else if (seats[row][seat] === 3) {
-      newSeats[row][seat] = 2;
-      setCount(count + 1);
-    } else {
-      newSeats[row][seat] = 4;
+    let ttl = showtime.ticket_price * (count + 1);
+    if (newSeats !== undefined) {
+      if (seats[row][seat] === 1) {
+        newSeats[row][seat] = 1;
+      } else if (seats[row][seat] === 2) {
+        newSeats[row][seat] = 3;
+        setCount(count - 1);
+        setTotal(ttl);
+      } else if (seats[row][seat] === 3) {
+        newSeats[row][seat] = 2;
+        setCount(count + 1);
+        setTotal(ttl);
+      } else {
+        newSeats[row][seat] = 4;
+      }
     }
     setSelectedSeats([row, seat]);
     setNewSeats(newSeats);
-    console.log(selectedSeats);
-    console.log(newSeats);
+
+    console.log(ttl);
     console.log(selectedDate);
   }
 
+  const createReservation = async () => {
+    try {
+      const myHeaders = new Headers();
+
+      myHeaders.append('Content-Type', 'application/json');
+      myHeaders.append('token', localStorage.token);
+      const shId = showtime.showtime_id;
+      const body = { shId, bookedSeats, selectedDate, total };
+      console.log(body);
+      const response = await fetch(
+        `http://localhost:5000/reservations/${userId} `,
+        {
+          method: 'POST',
+          headers: myHeaders,
+          body: JSON.stringify(body),
+        }
+      );
+
+      const parseResponse = await response.json();
+
+      console.log(parseResponse);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
   function onConfirmBook() {
-    console.log(hallScheme.hallscheme_id);
-    console.log(newSeats);
     updateHallScheme();
+    createReservation();
   }
 
   const useStyles = makeStyles((theme) => ({
@@ -224,8 +270,8 @@ const BookingPage = () => {
                     fullWidth
                     id="start-date"
                     label="Дата сеанса"
-                    minDate={new Date(showtimes.start_date)}
-                    maxDate={new Date(showtimes.end_date)}
+                    minDate={new Date(showtime.start_date)}
+                    maxDate={new Date(showtime.end_date)}
                     value={selectedDate}
                     onChange={(date) => setSelectedDate(date)}
                   />
@@ -236,11 +282,11 @@ const BookingPage = () => {
                   fullWidth
                   disabled
                   // select
-                  value={showtimes.start_at}
+                  value={showtime.start_at}
                   variant="outlined"
                 >
-                  {/* {showtimes.length > 0 &&
-                    showtimes.split(',').map((time) => (
+                  {/* {showtime.length > 0 &&
+                    showtime.split(',').map((time) => (
                       // eslint-disable-next-line react/no-array-index-key
                       <MenuItem key={`${time}`} value={time}>
                         {time}
@@ -271,7 +317,7 @@ const BookingPage = () => {
                       Цена билета
                     </Typography>
                     <Typography className={classes.bannerContent}>
-                      {showtimes.ticket_price}
+                      {showtime.ticket_price}
                       {' \u20BD'}
                     </Typography>
                   </Grid>
@@ -295,7 +341,7 @@ const BookingPage = () => {
                       Итого
                     </Typography>
                     <Typography className={classes.bannerContent}>
-                      {showtimes.ticket_price * count}
+                      {showtime.ticket_price * count}
                       {' \u20BD'}
                     </Typography>
                   </Grid>
@@ -326,6 +372,7 @@ const BookingPage = () => {
                   color="primary"
                   fullWidth
                   disabled={selectedSeats > 0}
+                  href="/"
                   onClick={() => onConfirmBook()}
                 >
                   Потвердить
