@@ -131,7 +131,7 @@ export default function App() {
           <Route path="/movies/:id" component={Movie} />
           <Route path="/booking/:id" component={BookingPage} />
           <Route path="/dashboard/myTickets" component={MyTickets} />
-          <Route path="*" component={() => '404 NOT FOUND'} />
+          <Route path="*" component={() => 'ERROR 404 NOT FOUND'} />
         </Switch>
       </BrowserRouter>
     </ThemeProvider>
