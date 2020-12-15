@@ -375,7 +375,7 @@ const BookingPage = () => {
                   href="/"
                   onClick={() => onConfirmBook()}
                 >
-                  Потвердить
+                  Подтвердить
                 </Button>
               </Grid>
             </Grid>
