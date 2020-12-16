@@ -2,7 +2,8 @@
 Веб-приложение для автоматизации продажи билетов в кинотеатр
 </h1>
 
-Использован стек технологий PERN: PostgreSQL, Expressjs, React/Redux, Nodejs.
+> Использован стек технологий PERN: PostgreSQL, Expressjs, React/Redux, Nodejs.
+
 <img src="https://github.com/xreyaf/cinema-app/blob/master/images%20and%20schemes/Archirecture.png" />
 
 # Скриншоты
