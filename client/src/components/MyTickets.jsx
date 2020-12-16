@@ -51,7 +51,6 @@ const MyTickets = () => {
       console.error(err.message);
     }
   };
-  console.log(userId);
   const [reservations, setReservations] = useState();
   const getReservations = async () => {
     try {
@@ -65,13 +64,11 @@ const MyTickets = () => {
 
       const parseData = await res.json();
       setReservations(parseData);
-      console.log(parseData);
     } catch (err) {
       console.error(err.message);
     }
   };
 
-  console.log(reservations);
   useEffect(() => {
     getEmail();
     getReservations();

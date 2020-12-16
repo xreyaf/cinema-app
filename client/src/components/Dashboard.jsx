@@ -6,18 +6,6 @@ const useStyles = makeStyles((theme) => ({
   movies: {
     marginTop: theme.spacing(1),
   },
-  card: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  cardMedia: {
-    paddingTop: '56.25%', // 16:9
-  },
-  cardContent: {
-    flexGrow: 1,
-    background: 'linear-gradient(to top, #000, rgba(0,0,0,0))',
-  },
 }));
 
 const Dashboard = ({ setAuth }) => {
@@ -34,7 +22,6 @@ const Dashboard = ({ setAuth }) => {
       setEmail(parseData.user_email);
 
       setUserId(parseData.user_id);
-      console.log(parseData);
     } catch (err) {
       console.error(err.message);
     }
