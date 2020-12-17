@@ -61,7 +61,15 @@ export default function SignUp({ setAuth }) {
       if (parseRes.token) {
         localStorage.setItem('token', parseRes.token);
         setAuth(true);
-        toast.success('Вы зарегистрировались!');
+        toast.success('Вы зарегистрировались!', {
+          position: 'bottom-right',
+          autoClose: 2800,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       } else {
         setAuth(false);
         toast.error(parseRes, {

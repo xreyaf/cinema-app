@@ -23,12 +23,12 @@ router.post("/:id", authorization, async (req, res) => {
 	}
 });
 
-// Получение всех резерваций
+// Получение всех билетов по идентификатору пользователя
 router.get("/user/:id", authorization, async (req, res) => {
 	const { id } = req.params;
 	try {
 		const response = await pool.query(
-			"SELECT * FROM reservations JOIN showtimes  ON reservations.showtime_id=showtimes.showtime_id JOIN movies ON movies.movie_id=showtimes.movie_id WHERE user_id=$1",
+			"SELECT *, reservations.start_date AS RSD FROM reservations JOIN showtimes  ON reservations.showtime_id=showtimes.showtime_id JOIN movies ON movies.movie_id=showtimes.movie_id WHERE user_id=$1",
 			[id]
 		);
 		res.json(response.rows);

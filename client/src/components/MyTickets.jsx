@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import { CssBaseline, Footer, Container, Typography, Grid } from '.';
+import {
+  CssBaseline,
+  Footer,
+  Container,
+  Typography,
+  Grid,
+  Table,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+  TableContainer,
+} from '.';
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -112,9 +118,7 @@ const MyTickets = () => {
                         </TableCell>
 
                         <TableCell className={classes.tableCell}>
-                          {new Date(
-                            reservation.start_date
-                          ).toLocaleDateString()}
+                          {new Date(reservation.rsd).toLocaleDateString()}
                         </TableCell>
                         <TableCell className={classes.tableCell}>
                           {reservation.start_at}

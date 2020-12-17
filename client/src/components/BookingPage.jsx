@@ -182,7 +182,7 @@ const BookingPage = () => {
       });
       toast.success('Билеты оформлены!', {
         position: 'bottom-right',
-        autoClose: 2500,
+        autoClose: 1500,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -197,7 +197,7 @@ const BookingPage = () => {
   function delay(URL) {
     setTimeout(function () {
       window.location = URL;
-    }, 2500);
+    }, 1900);
   }
 
   function onConfirmBook() {
@@ -205,7 +205,6 @@ const BookingPage = () => {
     createReservation();
     delay('/');
   }
-
   const useStyles = makeStyles((theme) => ({
     blurBackground: {
       backgroundImage: `linear-gradient(to right, rgba(0,0,0,.7) 10%, rgba(0,0,0,.7) 10%),url(${movie.back_image_url})`,
@@ -276,7 +275,8 @@ const BookingPage = () => {
                     minDate={new Date(showtime.start_date)}
                     maxDate={new Date(showtime.end_date)}
                     value={selectedDate}
-                    onChange={(date) => setSelectedDate(date)}
+                    // eslint-disable-next-line no-underscore-dangle
+                    onChange={(date) => setSelectedDate(date._d)}
                   />
                 </MuiPickersUtilsProvider>
               </Grid>
