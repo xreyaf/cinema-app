@@ -2,7 +2,7 @@ const router = require("express").Router();
 const authorization = require("../middleware/authorization");
 const pool = require("../db");
 
-// Получение информации о сеансе
+// Получение схем и сенасов для фильма
 router.get("/:id", authorization, async (req, res) => {
 	const { id } = req.params;
 	try {
@@ -37,7 +37,6 @@ router.put("/hallschemes/:id", authorization, async (req, res) => {
 	try {
 		const hallscheme_id = req.params.id;
 		const seats = req.body.newSeats;
-		console.log(hallscheme_id);
 		const updateHallscheme = await pool.query(
 			"UPDATE hallschemes SET seats = $1 WHERE hallscheme_id = $2 ",
 			[seats, hallscheme_id]

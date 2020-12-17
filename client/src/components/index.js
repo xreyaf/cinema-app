@@ -18,7 +18,6 @@ export { default as useScrollTrigger } from '@material-ui/core/useScrollTrigger'
 export { default as useMediaQuery } from '@material-ui/core/useMediaQuery';
 export { default as Box } from '@material-ui/core/Box';
 export { default as Paper } from '@material-ui/core/Paper';
-export { default as Fab } from '@material-ui/core/Fab';
 export { default as AppBar } from '@material-ui/core/AppBar';
 export { default as Avatar } from '@material-ui/core/Avatar';
 export { default as Toolbar } from '@material-ui/core/Toolbar';
@@ -36,7 +35,12 @@ export { default as CardContent } from '@material-ui/core/CardContent';
 export { default as CardMedia } from '@material-ui/core/CardMedia';
 export { default as Container } from '@material-ui/core/Container';
 export { default as CssBaseline } from '@material-ui/core/CssBaseline';
-export { default as Zoom } from '@material-ui/core/Zoom';
+export { default as Table } from '@material-ui/core/Table';
+export { default as TableBody } from '@material-ui/core/TableBody';
+export { default as TableCell } from '@material-ui/core/TableCell';
+export { default as TableContainer } from '@material-ui/core/TableContainer';
+export { default as TableHead } from '@material-ui/core/TableHead';
+export { default as TableRow } from '@material-ui/core/TableRow';
 
 // Icons
 export { default as IconButton } from '@material-ui/core/IconButton';
