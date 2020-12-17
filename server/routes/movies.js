@@ -2,7 +2,7 @@ const router = require("express").Router();
 const authorization = require("../middleware/authorization");
 const pool = require("../db");
 
-// Полечение фильмов
+// Получение фильмов
 router.get("/", authorization, async (req, res) => {
 	try {
 		const movies = await pool.query("SELECT * FROM movies");
