@@ -52,7 +52,7 @@ export default function SignIn({ setAuth }) {
     try {
       const body = { email, password };
 
-      const response = await fetch('/auth/login', {
+      const response = await fetch('https://cinema-appp.herokuapp.com/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
