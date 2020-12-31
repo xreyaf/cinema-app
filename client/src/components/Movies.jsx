@@ -39,7 +39,7 @@ const Movies = () => {
 
 	const getData = async () => {
 		try {
-			const res = await fetch("https://cinema-appp.herokuapp.com/movies", {
+			const res = await fetch("/movies", {
 				method: "GET",
 				headers: { token: localStorage.token },
 			});

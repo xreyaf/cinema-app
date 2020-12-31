@@ -67,13 +67,10 @@ export default function App() {
 
 	async function isAuth() {
 		try {
-			const response = await fetch(
-				"https://cinema-appp.herokuapp.com/auth/is-verify",
-				{
-					method: "GET",
-					headers: { token: localStorage.token },
-				}
-			);
+			const response = await fetch("/auth/is-verify", {
+				method: "GET",
+				headers: { token: localStorage.token },
+			});
 
 			const parseRes = await response.json();
 
