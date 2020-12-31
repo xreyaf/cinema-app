@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { makeStyles } from '@material-ui/styles';
+import { toast } from 'react-toastify';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
@@ -63,7 +64,6 @@ const BookingPage = () => {
 
       const parse = await res.json();
       setHallScheme(parse[0]);
-      console.log(parse[0].hallscheme_id);
     } catch (err) {
       console.error(err.message);
     }
@@ -78,15 +78,14 @@ const BookingPage = () => {
       });
 
       const parse = await res.json();
-
       setShowtime(parse[0]);
-      console.log(parse[0]);
     } catch (err) {
       console.error(err.message);
     }
   };
 
   const [seats, setSeats] = useState('');
+  // eslint-disable-next-line no-unused-vars
   const [selectedSeats, setSelectedSeats] = useState('');
   const [newSeats, setNewSeats] = useState('');
   let bookedSeats = [];
@@ -100,7 +99,6 @@ const BookingPage = () => {
       const parse = await res.json();
       setSeats(parse[0].seats);
       setNewSeats(parse[0].seats);
-      console.log(parse[0].seats);
     } catch (err) {
       console.error(err.message);
     }
@@ -129,7 +127,6 @@ const BookingPage = () => {
       }
       const body = { newSeats };
       const myHeaders = new Headers();
-      console.log(body);
       myHeaders.append('Content-Type', 'application/json');
       myHeaders.append('token', localStorage.token);
 
@@ -167,9 +164,6 @@ const BookingPage = () => {
     }
     setSelectedSeats([row, seat]);
     setNewSeats(newSeats);
-
-    console.log(ttl);
-    console.log(selectedDate);
   }
 
   const createReservation = async () => {
@@ -180,29 +174,37 @@ const BookingPage = () => {
       myHeaders.append('token', localStorage.token);
       const shId = showtime.showtime_id;
       const body = { shId, bookedSeats, selectedDate, total };
-      console.log(body);
-      const response = await fetch(
-        `http://localhost:5000/reservations/${userId} `,
-        {
-          method: 'POST',
-          headers: myHeaders,
-          body: JSON.stringify(body),
-        }
-      );
 
-      const parseResponse = await response.json();
-
-      console.log(parseResponse);
+      await fetch(`http://localhost:5000/reservations/${userId} `, {
+        method: 'POST',
+        headers: myHeaders,
+        body: JSON.stringify(body),
+      });
+      toast.success('Билеты оформлены!', {
+        position: 'bottom-right',
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     } catch (err) {
       console.error(err.message);
     }
   };
 
+  function delay(URL) {
+    setTimeout(function () {
+      window.location = URL;
+    }, 1900);
+  }
+
   function onConfirmBook() {
     updateHallScheme();
     createReservation();
+    delay('/');
   }
-
   const useStyles = makeStyles((theme) => ({
     blurBackground: {
       backgroundImage: `linear-gradient(to right, rgba(0,0,0,.7) 10%, rgba(0,0,0,.7) 10%),url(${movie.back_image_url})`,
@@ -273,7 +275,8 @@ const BookingPage = () => {
                     minDate={new Date(showtime.start_date)}
                     maxDate={new Date(showtime.end_date)}
                     value={selectedDate}
-                    onChange={(date) => setSelectedDate(date)}
+                    // eslint-disable-next-line no-underscore-dangle
+                    onChange={(date) => setSelectedDate(date._d)}
                   />
                 </MuiPickersUtilsProvider>
               </Grid>
@@ -371,8 +374,7 @@ const BookingPage = () => {
                   variant="contained"
                   color="primary"
                   fullWidth
-                  disabled={selectedSeats > 0}
-                  href="/"
+                  disabled={count === 0}
                   onClick={() => onConfirmBook()}
                 >
                   Подтвердить
