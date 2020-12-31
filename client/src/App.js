@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
