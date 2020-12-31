@@ -2,6 +2,7 @@ const router = require("express").Router();
 const authorization = require("../middleware/authorization");
 const pool = require("../db");
 
+// Получение идентификатора пользователя
 router.get("/", authorization, async (req, res) => {
 	try {
 		const user = await pool.query(

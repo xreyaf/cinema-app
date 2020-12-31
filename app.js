@@ -1,7 +1,10 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+<<<<<<< HEAD:app.js
 const path = require("path");
+=======
+>>>>>>> origin/dev:server/app.js
 
 //middleware
 app.use(cors());

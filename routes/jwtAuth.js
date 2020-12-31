@@ -5,7 +5,7 @@ const jwtGenerator = require("../utils/jwtGenerator");
 const validinfo = require("../middleware/validinfo");
 const authorization = require("../middleware/authorization");
 
-//Registering
+// Регистрация
 router.post("/register", validinfo, async (req, res) => {
 	try {
 		const { email, password } = req.body;
@@ -16,17 +16,17 @@ router.post("/register", validinfo, async (req, res) => {
 		if (user.rows.length !== 0) {
 			return res.status(401).json("Пользователь уже зарегистрирован!");
 		}
-		//bcypt пароля
+		// Шифрование пароля
 		const saltRounds = 10;
 		const salt = await bcrypt.genSalt(saltRounds);
 		const bcryptPassword = await bcrypt.hash(password, salt);
 
-		//новый пользователь
+		// Новый пользователь
 		const newUser = await pool.query(
 			"INSERT INTO users (user_email, user_password) VALUES ($1, $2) RETURNING *",
 			[email, bcryptPassword]
 		);
-		//генерирование токена
+		// Генерирование токена
 		const token = jwtGenerator(newUser.rows[0].user_id);
 
 		res.json({ token });
@@ -36,7 +36,7 @@ router.post("/register", validinfo, async (req, res) => {
 	}
 });
 
-//login route
+// Логин
 router.post("/login", validinfo, async (req, res) => {
 	try {
 		const { email, password } = req.body;
@@ -64,7 +64,7 @@ router.post("/login", validinfo, async (req, res) => {
 	}
 });
 
-//Check login
+// Проверка входа
 router.get("/is-verify", authorization, async (req, res) => {
 	try {
 		res.json(true);
