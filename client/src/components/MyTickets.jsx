@@ -45,7 +45,7 @@ const MyTickets = () => {
   const [userId, setUserId] = useState('');
   const getEmail = async () => {
     try {
-      const res = await fetch('http://localhost:5000/dashboard/', {
+      const res = await fetch('/dashboard/', {
         method: 'GET',
         headers: { token: localStorage.token },
       });
@@ -60,13 +60,10 @@ const MyTickets = () => {
   const [reservations, setReservations] = useState();
   const getReservations = async () => {
     try {
-      const res = await fetch(
-        `http://localhost:5000/reservations/user/${userId}`,
-        {
-          method: 'GET',
-          headers: { token: localStorage.token },
-        }
-      );
+      const res = await fetch(`/reservations/user/${userId}`, {
+        method: 'GET',
+        headers: { token: localStorage.token },
+      });
 
       const parseData = await res.json();
       setReservations(parseData);

@@ -25,7 +25,7 @@ const BookingPage = () => {
   const [userId, setUserId] = useState('');
   const getEmail = async () => {
     try {
-      const res = await fetch('http://localhost:5000/dashboard/', {
+      const res = await fetch('/dashboard/', {
         method: 'GET',
         headers: { token: localStorage.token },
       });
@@ -42,7 +42,7 @@ const BookingPage = () => {
   const { id } = useParams();
   const getMovie = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/movies/${id}`, {
+      const res = await fetch(`/movies/${id}`, {
         method: 'GET',
         headers: { token: localStorage.token },
       });
@@ -57,7 +57,7 @@ const BookingPage = () => {
   const [hallScheme, setHallScheme] = useState('');
   const getHallSchemeData = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/booking/${id}`, {
+      const res = await fetch(`/booking/${id}`, {
         method: 'GET',
         headers: { token: localStorage.token },
       });
@@ -72,7 +72,7 @@ const BookingPage = () => {
   const [showtime, setShowtime] = useState('');
   const getShowtime = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/booking/showtimes/${id}`, {
+      const res = await fetch(`/booking/showtimes/${id}`, {
         method: 'GET',
         headers: { token: localStorage.token },
       });
@@ -91,7 +91,7 @@ const BookingPage = () => {
   let bookedSeats = [];
   const getSeats = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/booking/${id}`, {
+      const res = await fetch(`/booking/${id}`, {
         method: 'GET',
         headers: { token: localStorage.token },
       });
@@ -130,14 +130,11 @@ const BookingPage = () => {
       myHeaders.append('Content-Type', 'application/json');
       myHeaders.append('token', localStorage.token);
 
-      await fetch(
-        `http://localhost:5000/booking/hallschemes/${hallScheme.hallscheme_id}`,
-        {
-          method: 'PUT',
-          headers: myHeaders,
-          body: JSON.stringify(body),
-        }
-      );
+      await fetch(`/booking/hallschemes/${hallScheme.hallscheme_id}`, {
+        method: 'PUT',
+        headers: myHeaders,
+        body: JSON.stringify(body),
+      });
     } catch (err) {
       console.error(err.message);
     }
@@ -175,7 +172,7 @@ const BookingPage = () => {
       const shId = showtime.showtime_id;
       const body = { shId, bookedSeats, selectedDate, total };
 
-      await fetch(`http://localhost:5000/reservations/${userId} `, {
+      await fetch(`/reservations/${userId} `, {
         method: 'POST',
         headers: myHeaders,
         body: JSON.stringify(body),

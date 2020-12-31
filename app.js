@@ -1,16 +1,13 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-<<<<<<< HEAD:app.js
 const path = require("path");
-=======
->>>>>>> origin/dev:server/app.js
 
-//middleware
+// middleware
 app.use(cors());
 app.use(express.json()); //req.body
 
-app.use(express.static("client/build"));
+// app.use(express.static("./client/build"));
 
 if (process.env.NODE_ENV === "production") {
 	app.use(express.static(path.join(__dirname, "client/build")));
@@ -18,7 +15,7 @@ if (process.env.NODE_ENV === "production") {
 
 console.log(__dirname);
 
-//Routes
+// Routes
 app.use("/auth", require("./routes/jwtAuth"));
 
 app.use("/dashboard", require("./routes/dashboard"));
@@ -28,6 +25,10 @@ app.use("/movies", require("./routes/movies"));
 app.use("/booking", require("./routes/booking"));
 
 app.use("/reservations", require("./routes/reservations"));
+
+app.get("*", (req, res) => {
+	res.sendFile(path.join(__dirname, "client/build/index.html"));
+});
 
 const PORT = process.env.PORT || 5000;
 

@@ -16,7 +16,7 @@ const Movie = () => {
   const { id } = useParams();
   const getMovie = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/movies/${id}`, {
+      const res = await fetch(`/movies/${id}`, {
         method: 'GET',
         headers: { token: localStorage.token },
       });
