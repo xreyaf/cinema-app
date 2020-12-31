@@ -45,7 +45,7 @@ const MyTickets = () => {
   const [userId, setUserId] = useState('');
   const getEmail = async () => {
     try {
-      const res = await fetch('/dashboard/', {
+      const res = await fetch('https://cinema-appp.herokuapp.com/dashboard/', {
         method: 'GET',
         headers: { token: localStorage.token },
       });

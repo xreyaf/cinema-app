@@ -16,10 +16,13 @@ const Movie = () => {
   const { id } = useParams();
   const getMovie = async () => {
     try {
-      const res = await fetch(`/movies/${id}`, {
-        method: 'GET',
-        headers: { token: localStorage.token },
-      });
+      const res = await fetch(
+        `https://cinema-appp.herokuapp.com/movies/${id}`,
+        {
+          method: 'GET',
+          headers: { token: localStorage.token },
+        }
+      );
 
       const parse = await res.json();
       setSelectedMovie(parse[0]);
