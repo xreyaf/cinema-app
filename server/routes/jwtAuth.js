@@ -14,7 +14,7 @@ router.post("/register", validinfo, async (req, res) => {
 		]);
 
 		if (user.rows.length !== 0) {
-			return res.status(401).json("Пользователь уже зарегистрирован!");
+			return res.status(401).json("Вы уже зарегистрированы!");
 		}
 		// Шифрование пароля
 		const saltRounds = 10;

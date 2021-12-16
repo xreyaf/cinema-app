@@ -10,6 +10,9 @@ router.get("/:id", authorization, async (req, res) => {
 			"SELECT * FROM hallschemes AS h JOIN showtimes AS s ON s.hallscheme_id=h.hallscheme_id JOIN movies AS m ON s.movie_id=m.movie_id WHERE m.movie_id=$1",
 			[id]
 		);
+		if (response.rowCount == 0) {
+			return res.status(404).json({ msg: "Not found" });
+		}
 		res.json(response.rows);
 	} catch (err) {
 		console.error(err.message);
@@ -25,6 +28,9 @@ router.get("/showtimes/:id", authorization, async (req, res) => {
 			"SELECT * FROM showtimes WHERE movie_id=$1 ",
 			[id]
 		);
+		if (response.rowCount == 0) {
+			return res.status(404).json({ msg: "Not found" });
+		}
 		res.json(response.rows);
 	} catch (err) {
 		console.error(err.message);

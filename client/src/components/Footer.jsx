@@ -7,6 +7,7 @@ const useStyles = makeStyles((theme) => ({
     background: 'transparant',
     padding: theme.spacing(2, 0, 0, 0),
     margin: 'initial',
+    bottom: 0,
   },
 }));
 

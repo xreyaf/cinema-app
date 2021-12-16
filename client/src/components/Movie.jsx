@@ -34,27 +34,30 @@ const Movie = () => {
   }, []);
 
   const useStyles = makeStyles((theme) => ({
+    palette: {
+      type: 'dark',
+    },
     backImg: {
-      backgroundImage: `linear-gradient(to right, rgba(0,0,0,.9) 25%, transparent 100%),url(${selectedMovie.image_url})`,
+      backgroundImage: `linear-gradient(to right, rgba(0,0,0,.9) 35%, transparent 100%),url(${selectedMovie.image_url})`,
       position: 'absolute',
-      filter: 'blur(1.3px)',
       height: '100vh',
       backgroundPosition: 'center',
       backgroundSize: 'cover',
       backgroundRepeat: 'no-repeat',
-      width: '100%',
+      width: '100vw',
     },
     movieInfo: {
       background: 'transparant',
       transform: 'translate(0%, 0%)',
-      padding: theme.spacing(30, 2, 0, 2),
+      padding: theme.spacing(15, 20, 0, 20),
       margin: theme.spacing(0, 50, 0, 0),
+      color: theme.palette.common.white,
     },
     genre: {
       padding: theme.spacing(0.5, 4),
       marginRight: theme.spacing(1.5),
       border: '2px solid ',
-      borderColor: '#5f5da9',
+      borderColor: theme.palette.primary.light,
       borderRadius: 20,
       [theme.breakpoints.down('sm')]: {
         padding: theme.spacing(0.5, 2),
@@ -63,13 +66,15 @@ const Movie = () => {
     description: {
       mixBlendMode: 'difference',
       padding: theme.spacing(0, 50, 0, 0),
+      color: theme.palette.common.white,
     },
     director: {
       color: theme.palette.primary.light,
     },
     btn: {
+      color: theme.palette.common.white,
       border: '2px solid ',
-      borderColor: '#5f5da9',
+      borderColor: theme.palette.primary.light,
       borderRadius: 20,
       padding: theme.spacing(0.7, 4),
       marginRight: theme.spacing(1.5),
@@ -85,7 +90,7 @@ const Movie = () => {
   return (
     <>
       <div className={classes.backImg} />
-      <Container className={classes.movieInfo} maxWidth="lg">
+      <Container className={classes.movieInfo}>
         <Box mb={3} display="flex" alignItems="center" flexWrap="wrap">
           {genre[0] !== undefined ? (
             genre.map((genree) => (

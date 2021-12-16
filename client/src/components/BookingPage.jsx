@@ -3,24 +3,12 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { makeStyles } from '@material-ui/styles';
 import { toast } from 'react-toastify';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
-import MomentUtils from '@date-io/moment';
-import {
-  Container,
-  Grid,
-  // MenuItem,
-  TextField,
-  Typography,
-  Button,
-  BookingSeats,
-} from '.';
+import Moment from 'react-moment';
+
+import GooglePayButton from '@google-pay/button-react';
+import { Container, Grid, Typography, Button, BookingSeats } from '.';
 
 const BookingPage = () => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
-
   const [email, setEmail] = useState('');
   const [userId, setUserId] = useState('');
   const getEmail = async () => {
@@ -145,25 +133,32 @@ const BookingPage = () => {
 
   const [count, setCount] = useState(0);
   const [total, setTotal] = useState(0);
+
+  const checkCount = (row, seat) => {
+    if (count < 5) {
+      newSeats[row][seat] = 2;
+      setCount(count + 1);
+      setTotal(showtime.ticket_price * (count + 1));
+    } else {
+      alert('Нельзя выбрать больше пяти мест');
+    }
+  };
+
   function onSelectSeat(row, seat) {
-    let ttl = showtime.ticket_price * (count + 1);
     if (newSeats !== undefined) {
       if (seats[row][seat] === 1) {
         newSeats[row][seat] = 1;
       } else if (seats[row][seat] === 2) {
-        newSeats[row][seat] = 3;
         setCount(count - 1);
-        setTotal(ttl);
+        setTotal(showtime.ticket_price * (count - 1));
+        newSeats[row][seat] = 3;
       } else if (seats[row][seat] === 3) {
-        newSeats[row][seat] = 2;
-        setCount(count + 1);
-        setTotal(ttl);
+        checkCount(row, seat);
       } else {
         newSeats[row][seat] = 4;
       }
     }
-    setSelectedSeats([row, seat]);
-    setNewSeats(newSeats);
+    console.log(count);
   }
 
   const createReservation = async () => {
@@ -173,6 +168,7 @@ const BookingPage = () => {
       myHeaders.append('Content-Type', 'application/json');
       myHeaders.append('token', localStorage.token);
       const shId = showtime.showtime_id;
+      const selectedDate = showtime.show_date;
       const body = { shId, bookedSeats, selectedDate, total };
 
       await fetch(`http://localhost:5000/reservations/${userId} `, {
@@ -213,15 +209,16 @@ const BookingPage = () => {
       zIndex: -1,
       right: 0,
       height: '100vh',
-      filter: 'blur(6px)',
+      filter: 'blur(0px)',
       backgroundPosition: 'center',
       backgroundSize: 'cover',
       backgroundRepeat: 'no-repeat',
-      width: '100%',
+      width: '100vw',
     },
     container: {
       background: 'transparant',
       transform: 'translate(0%, 0%)',
+      color: theme.palette.common.white,
     },
     form: {
       padding: theme.spacing(4, 0, 0, 0),
@@ -229,12 +226,11 @@ const BookingPage = () => {
     bannerTitle: {
       fontSize: theme.spacing(1.4),
       textTransform: 'uppercase',
-      color: 'rgb(93, 93, 97)',
+      color: theme.palette.common.white,
       marginBottom: theme.spacing(1),
     },
     bannerContent: {
       fontSize: theme.spacing(2),
-
       color: theme.palette.common.white,
     },
     [theme.breakpoints.down('sm')]: {
@@ -244,7 +240,13 @@ const BookingPage = () => {
     },
     checkout: {
       padding: theme.spacing(4, 0, 0, 0),
+      color: theme.palette.common.white,
     },
+    textfield: {
+      color: theme.palette.common.white,
+      textAlign: 'center',
+    },
+    gPaybutton: { display: 'none' },
   }));
 
   const classes = useStyles();
@@ -255,47 +257,19 @@ const BookingPage = () => {
           <Grid item xs={12} md={12}>
             <Grid className={classes.form} container spacing={3}>
               <Grid item xs className={classes.hideOnSmall}>
-                <TextField
-                  fullWidth
-                  disabled
-                  value={`${hallScheme.hall_name} зал`}
-                  variant="outlined"
-                />
+                <Typography variant="h5" className={classes.textfield}>
+                  {`${hallScheme.hall_name} зал`}
+                </Typography>
               </Grid>
               <Grid item xs>
-                <MuiPickersUtilsProvider utils={MomentUtils}>
-                  <KeyboardDatePicker
-                    disableToolbar
-                    variant="inline"
-                    inputVariant="outlined"
-                    margin="none"
-                    fullWidth
-                    id="start-date"
-                    label="Дата сеанса"
-                    minDate={new Date(showtime.start_date)}
-                    maxDate={new Date(showtime.end_date)}
-                    value={selectedDate}
-                    // eslint-disable-next-line no-underscore-dangle
-                    onChange={(date) => setSelectedDate(date._d)}
-                  />
-                </MuiPickersUtilsProvider>
+                <Typography variant="h5" className={classes.textfield}>
+                  <Moment format="DD/MM/YYYY" date={showtime.show_date} />
+                </Typography>
               </Grid>
               <Grid item xs>
-                <TextField
-                  fullWidth
-                  disabled
-                  // select
-                  value={showtime.start_at}
-                  variant="outlined"
-                >
-                  {/* {showtime.length > 0 &&
-                    showtime.split(',').map((time) => (
-                      // eslint-disable-next-line react/no-array-index-key
-                      <MenuItem key={`${time}`} value={time}>
-                        {time}
-                      </MenuItem>
-                    ))} */}
-                </TextField>
+                <Typography variant="h5" className={classes.textfield}>
+                  {showtime.start_at}
+                </Typography>
               </Grid>
             </Grid>
 
@@ -304,8 +278,12 @@ const BookingPage = () => {
               onSelectSeat={(indexRow, index) => onSelectSeat(indexRow, index)}
             />
 
-            <Grid container className={classes.checkout}>
-              <Grid item xs={4} md={8}>
+            <Grid
+              container
+              justifyContent="space-evenly"
+              className={classes.checkout}
+            >
+              <Grid item xs={6} md={6}>
                 <Grid container spacing={3} style={{ padding: 20 }}>
                   <Grid item className={classes.hideOnSmall}>
                     <Typography className={classes.bannerTitle}>
@@ -344,41 +322,114 @@ const BookingPage = () => {
                       Итого
                     </Typography>
                     <Typography className={classes.bannerContent}>
-                      {showtime.ticket_price * count}
+                      {total}
                       {' \u20BD'}
                     </Typography>
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid
-                item
-                xs={4}
-                md={2}
-                style={{
-                  display: 'flex',
-                }}
-              >
-                <Button color="inherit" fullWidth href={`/movies/${id}`}>
-                  Отменить
-                </Button>
-              </Grid>
-              <Grid
-                item
-                xs={4}
-                md={2}
-                style={{
-                  display: 'flex',
-                }}
-              >
-                <Button
-                  variant="contained"
-                  color="primary"
-                  fullWidth
-                  disabled={count === 0}
-                  onClick={() => onConfirmBook()}
+              <Grid item xs={6} md={6}>
+                <Grid
+                  container
+                  justifyContent="flex-end"
+                  spacing={3}
+                  style={{ padding: 20 }}
                 >
-                  Подтвердить
-                </Button>
+                  <Grid
+                    item
+                    xs
+                    style={{
+                      display: 'flex',
+                    }}
+                  >
+                    <Button
+                      style={{
+                        maxHeight: '40px',
+                        minHeight: '40px',
+                      }}
+                      variant="contained"
+                      fullWidth
+                      href={`/movies/${id}`}
+                    >
+                      Отменить
+                    </Button>
+                  </Grid>
+                  <Grid
+                    item
+                    xs
+                    style={{
+                      display: 'flex',
+                    }}
+                  >
+                    <GooglePayButton
+                      style={
+                        count === 0
+                          ? { display: 'none' }
+                          : { display: 'inline-block' }
+                      }
+                      fullWidth
+                      environment="TEST"
+                      existingPaymentMethodRequired="false"
+                      buttonColor="black"
+                      buttonType="checkout"
+                      paymentRequest={{
+                        apiVersion: 2,
+                        apiVersionMinor: 0,
+                        allowedPaymentMethods: [
+                          {
+                            type: 'CARD',
+                            parameters: {
+                              allowedAuthMethods: [
+                                'PAN_ONLY',
+                                'CRYPTOGRAM_3DS',
+                              ],
+                              allowedCardNetworks: ['MASTERCARD', 'VISA'],
+                            },
+                            tokenizationSpecification: {
+                              type: 'PAYMENT_GATEWAY',
+                              parameters: {
+                                gateway: 'example',
+                                gatewayMerchantId: 'exampleGatewayMerchantId',
+                              },
+                            },
+                          },
+                        ],
+                        merchantInfo: {
+                          merchantId: '12345678901234567890',
+                          merchantName: `билет(ы) на фильм ${movie.movie_title}`,
+                        },
+                        transactionInfo: {
+                          totalPriceStatus: 'FINAL',
+                          totalPriceLabel: 'Total',
+                          totalPrice: `${total}`,
+                          currencyCode: 'RUB',
+                          countryCode: 'US',
+                        },
+                        shippingAddressRequired: true,
+                        callbackIntents: [
+                          'SHIPPING_ADDRESS',
+                          'PAYMENT_AUTHORIZATION',
+                        ],
+                      }}
+                      onLoadPaymentData={(paymentRequest) => {
+                        console.log('Success', paymentRequest);
+                        onConfirmBook();
+                      }}
+                      onPaymentAuthorized={(paymentData) => {
+                        console.log('Payment Authorised Success', paymentData);
+                        return { transactionState: 'SUCCESS' };
+                      }}
+                      onPaymentDataChanged={(paymentData) => {
+                        console.log('On Payment Data Changed', paymentData);
+                        return {};
+                      }}
+                      onError={(e) => {
+                        alert('Не удалось выполнить платёж!');
+                        console.log('Не удалось выполнить платёж!', e.message);
+                      }}
+                    />
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
