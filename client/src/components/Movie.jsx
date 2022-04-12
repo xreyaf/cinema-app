@@ -24,6 +24,7 @@ const Movie = () => {
       const parse = await res.json();
       setSelectedMovie(parse[0]);
       setGenre(parse[0].movie_genre);
+      console.log(parse[0]);
     } catch (err) {
       console.error(err.message);
     }

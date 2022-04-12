@@ -52,6 +52,7 @@ const Movies = () => {
 
       const parseData = await res.json();
       setData(parseData);
+      console.log(parseData);
     } catch (err) {
       console.error(err.message);
     }
