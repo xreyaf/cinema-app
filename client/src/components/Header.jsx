@@ -1,98 +1,90 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import {
-  CssBaseline,
-  Toolbar,
-  AppBar,
-  Typography,
-  Menu,
-  IconButton,
-  AccountCircle,
-  MenuItem,
-  Link,
-} from '.';
+import { CssBaseline, Toolbar, AppBar, Typography, Link, Button, Box } from '.';
 
-const useStyles = makeStyles(() => ({
-  toolbar: {
-    flexGrow: 1,
+const useStyles = makeStyles((theme) => ({
+  appbar: {},
+  appbarWrapper: {
+    width: '80vw',
+    margin: '0 auto',
+    background: 'none !important',
   },
-  title: {
+  appbarTitle: {
     flexGrow: 1,
+    color: theme.palette.primary.light,
   },
-  user: {
-    flexGrow: 1,
+  menu: {
+    padding: '0 1rem 0 0 ',
+  },
+  menuItem: {
+    padding: '0 1rem',
+    '&:hover': {
+      color: theme.palette.primary.light,
+    },
   },
 }));
 
 const Header = (props) => {
   const classes = useStyles();
-  const { email, userId, logout } = props;
-
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const { userId, logout } = props;
 
   return (
     <>
       <CssBaseline />
-
-      <AppBar className={classes.toolbar} position="sticky" color="inherit">
-        <Toolbar>
-          <Typography
-            className={classes.title}
-            variant="h6"
-            color="inherit"
-            noWrap
-          >
+      <AppBar position="sticky" color="inherit">
+        <Toolbar className={classes.appbarWrapper}>
+          <h1 className={classes.appbarTitle}>
             <Link href="/" color="inherit" style={{ textDecoration: 'none' }}>
-              Cinema
+              CINEMA
             </Link>
-          </Typography>
-          <Typography variant="body1" color="textPrimary" align="center">
-            {email}
-            {` `}
-          </Typography>
-          <IconButton
-            aria-label="account of current user"
-            aria-controls="menu-appbar"
-            aria-haspopup="true"
-            onClick={handleMenu}
-            color="primary"
-          >
-            <AccountCircle />
-          </IconButton>
-          <Menu
-            id="menu-appbar"
-            anchorEl={anchorEl}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            open={open}
-            onClose={handleClose}
-          >
-            <Link
-              href={`/dashboard/myTickets/${userId}`}
-              style={{
-                textDecoration: 'none',
-                color: 'inherit',
-              }}
+          </h1>
+          <Box display="flex" className={classes.menu}>
+            <Typography
+              className={classes.menuItem}
+              variant="h6"
+              color="textPrimary"
+              align="center"
             >
-              <MenuItem>Мои билеты</MenuItem>
-            </Link>
-            <MenuItem onClick={(e) => logout(e)}>Выйти</MenuItem>
-          </Menu>
+              <Link
+                href="/"
+                color="inherit"
+                style={{
+                  textDecoration: 'none',
+                }}
+              >
+                Главная
+              </Link>
+            </Typography>
+            <Typography
+              className={classes.menuItem}
+              variant="h6"
+              color="textPrimary"
+              align="center"
+            >
+              <Link
+                href={`/dashboard/myTickets/${userId}`}
+                color="inherit"
+                style={{ textDecoration: 'none' }}
+              >
+                Мои билеты
+              </Link>
+            </Typography>
+          </Box>
+          <Button
+            style={{
+              maxWidth: '100px',
+              minWidth: '100px',
+              borderRadius: 20,
+            }}
+            variant="contained"
+            color="primary"
+            onClick={(e) => logout(e)}
+          >
+            <Typography variant="h7" align="center">
+              Выйти
+            </Typography>
+          </Button>
         </Toolbar>
       </AppBar>
     </>
@@ -102,6 +94,5 @@ const Header = (props) => {
 export default Header;
 
 Header.propTypes = {
-  email: PropTypes.string.isRequired,
   userId: PropTypes.string.isRequired,
 };

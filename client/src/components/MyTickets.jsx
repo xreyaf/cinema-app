@@ -12,6 +12,7 @@ import {
   TableBody,
   TableCell,
   TableContainer,
+  Header,
 } from '.';
 
 const useStyles = makeStyles((theme) => ({
@@ -83,6 +84,7 @@ const MyTickets = () => {
   return (
     <>
       <CssBaseline />
+      <Header />
       <Container maxWidth="lg">
         <Grid container spacing={2}>
           <Grid item xs={12}>

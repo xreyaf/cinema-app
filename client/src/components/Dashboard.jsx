@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { CssBaseline, Movies, Container, Header, Footer } from '.';
-
-const useStyles = makeStyles((theme) => ({
-  movies: {
-    marginTop: theme.spacing(1),
-  },
-}));
+import { CssBaseline, Movies, Header, Footer } from '.';
 
 const Dashboard = ({ setAuth }) => {
   const [email, setEmail] = useState('');
@@ -41,14 +34,11 @@ const Dashboard = ({ setAuth }) => {
     getEmail();
   }, []);
 
-  const classes = useStyles();
   return (
     <>
       <CssBaseline />
       <Header userId={userId} email={email} logout={logout} />
-      <Container maxWidth="lg" className={classes.movies}>
-        <Movies />
-      </Container>
+      <Movies />
       <Footer />
     </>
   );

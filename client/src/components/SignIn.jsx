@@ -66,7 +66,7 @@ export default function SignIn({ setAuth }) {
         setAuth(true);
         toast.success('Добро пожаловать!', {
           position: 'bottom-right',
-          autoClose: 2800,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -76,7 +76,7 @@ export default function SignIn({ setAuth }) {
       } else setAuth(false);
       toast.info(parseRes, {
         position: 'bottom-right',
-        autoClose: 2800,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -143,7 +143,7 @@ export default function SignIn({ setAuth }) {
 
             <Grid container justify="flex-end">
               <Grid item>
-                <Link href="/register" variant="body2" color="secondary">
+                <Link href="/register" variant="body2" color="inherit">
                   Нет аккаунта? Регистрация
                 </Link>
               </Grid>

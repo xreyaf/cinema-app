@@ -142,7 +142,7 @@ export default function SignUp({ setAuth }) {
 
             <Grid container justify="flex-end">
               <Grid item>
-                <Link href="/login" variant="body2" color="secondary">
+                <Link href="/login" variant="body2" color="inherit">
                   Есть аккаунт? Войти
                 </Link>
               </Grid>

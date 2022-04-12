@@ -19,7 +19,7 @@ router.post("/:id", authorization, async (req, res) => {
 		res.json(newReservation.rows[0]);
 	} catch (err) {
 		console.error(err.message);
-		res.starus(500).send("Server Error");
+		res.status(500).send("Server Error");
 	}
 });
 
